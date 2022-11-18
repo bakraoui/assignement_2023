@@ -28,7 +28,7 @@ public class TransferMapper {
         transfer.setCompteEmetteur(emetteur);
 
         transfer.setDateExecution(transferDto.getDate());
-        transfer.setNom_prenom_emetteur(emetteur.getUtilisateur().getFirstname()+" "+emetteur.getUtilisateur().getLastname());
+        transfer.setNomPrenomEmetteur(emetteur.getUtilisateur().getFirstname()+" "+emetteur.getUtilisateur().getLastname());
 
         return transfer;
     }

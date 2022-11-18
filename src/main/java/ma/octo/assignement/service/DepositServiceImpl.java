@@ -1,6 +1,8 @@
 package ma.octo.assignement.service;
 
 import ma.octo.assignement.domain.Compte;
+import ma.octo.assignement.domain.audit.Audit;
+import ma.octo.assignement.domain.audit.AuditDeposit;
 import ma.octo.assignement.domain.operation.MoneyDeposit;
 import ma.octo.assignement.dto.DepositDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
@@ -42,13 +44,8 @@ public class DepositServiceImpl implements DepositService {
     @Override
     public void createTransaction(DepositDto depositDto) throws TransactionException, CompteNonExistantException {
 
-        Compte beneficiaire = compteRepository.findByNrCompte(depositDto.getNrCompteBeneficiaire());
-
-        if (beneficiaire == null) {
-            throw new CompteNonExistantException("Compte beneficiaire non Existant");
-        }
-
-        ValidationResult result = isMontantNonVide()
+        ValidationResult result = isNumeroCompteNonValide()
+                .and(isMontantNonVide())
                 .and(isMontantNonAtteind())
                 .and(isMontantDepasse())
                 .and(isMotifValid())
@@ -56,6 +53,15 @@ public class DepositServiceImpl implements DepositService {
 
         if (!result.equals(SUCCES))
             throw new TransactionException(result.getType());
+
+
+        Compte beneficiaire = compteRepository
+                .findByNrCompte(depositDto.getNrCompteBeneficiaire());
+
+        if (beneficiaire == null) {
+            throw new CompteNonExistantException("Compte beneficiaire non Existant");
+        }
+
 
         // update receiver's sold
         beneficiaire.setSolde(beneficiaire.getSolde().add(depositDto.getMontant()));
@@ -66,9 +72,12 @@ public class DepositServiceImpl implements DepositService {
         depositRepository.save(moneyDeposit);
 
         // create an audit
-        auditService.auditDeposit("Deposit fait par " + depositDto.getNom_prenom_emetteur() + " vers "
+        Audit audit = new AuditDeposit();
+        String message = "Deposit fait par " + depositDto.getNomPrenomEmetteur() + " vers "
                 + depositDto.getNrCompteBeneficiaire() + " d'un montant de " + depositDto.getMontant()
-                .toString());
+                .toString();
+        audit.setMessage(message);
+        auditService.createAudit(audit);
 
     }
 }

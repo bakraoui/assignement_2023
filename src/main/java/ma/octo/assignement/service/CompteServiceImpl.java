@@ -25,9 +25,11 @@ import static ma.octo.assignement.service.validators.CompteValidator.ValidationR
 public class CompteServiceImpl implements CompteService {
 
     private final CompteRepository compteRepository;
+    
     private final UtilisateurRepository utilisateurRepository;
 
-    public CompteServiceImpl(CompteRepository compteRepository, UtilisateurRepository utilisateurRepository) {
+    public CompteServiceImpl(CompteRepository compteRepository,
+                             UtilisateurRepository utilisateurRepository) {
         this.compteRepository = compteRepository;
         this.utilisateurRepository = utilisateurRepository;
     }
@@ -40,7 +42,7 @@ public class CompteServiceImpl implements CompteService {
 
         if (utilisateur == null) {
             throw new UtilisateurNonExistantException(
-                    "Aucun utilisateur n'est existant avec un identifiant "
+                    "Aucun utilisateur n'est existant avec cet identifiant "
                             + compteDto.getUtilisateurUsername() );
         }
 

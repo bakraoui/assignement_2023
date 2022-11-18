@@ -28,13 +28,13 @@ class TransferController {
         this.transferService = transferService;
     }
 
-    @GetMapping("")
+    @GetMapping
     List<Transfer> loadAll() {
         LOGGER.info("Lister des utilisateurs");
         return transferService.allTransfer();
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createTransaction(@RequestBody TransferDto transferDto)
             throws CompteNonExistantException, TransactionException, SoldeDisponibleInsuffisantException {

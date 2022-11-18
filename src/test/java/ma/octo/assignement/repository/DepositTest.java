@@ -19,17 +19,21 @@ import java.math.RoundingMode;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+
 public class DepositTest {
 
+    private final DepositService depositService;
+    private final UtilisateurService utilisateurService;
+    private final CompteService compteService;
+
     @Autowired
-    private DepositService depositService;
-    @Autowired
-    private UtilisateurService utilisateurService;
-    @Autowired
-    private CompteService compteService;
+    public DepositTest(DepositService depositService, UtilisateurService utilisateurService, CompteService compteService) {
+        this.depositService = depositService;
+        this.utilisateurService = utilisateurService;
+        this.compteService = compteService;
+    }
 
     @Test
     public void save() throws TransactionException, CompteNonExistantException {
@@ -52,7 +56,7 @@ public class DepositTest {
         // faire un deposit d'argent
         DepositDto depositDto = new DepositDto();
         depositDto.setDate(new Date());
-        depositDto.setNom_prenom_emetteur("Bakraoui Ayoub");
+        depositDto.setNomPrenomEmetteur("Bakraoui Ayoub");
         depositDto.setMontant(BigDecimal.valueOf(10_000).setScale(2, RoundingMode.CEILING));
         depositDto.setNrCompteBeneficiaire("010000F000001000");
         depositDto.setMotif("Deposit de Ayoub Bakraoui");

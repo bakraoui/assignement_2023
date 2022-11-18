@@ -26,7 +26,7 @@ public abstract class Operation {
     private Date dateExecution;
 
     @Column
-    private String nom_prenom_emetteur;
+    private String nomPrenomEmetteur;
 
     @ManyToOne
     private Compte compteBeneficiaire;

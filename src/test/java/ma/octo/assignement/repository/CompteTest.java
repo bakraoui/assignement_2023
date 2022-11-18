@@ -4,14 +4,11 @@ import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.Utilisateur;
 import ma.octo.assignement.dto.CompteDto;
 import ma.octo.assignement.dto.UtilisateurDto;
-import ma.octo.assignement.service.CompteServiceImpl;
 import ma.octo.assignement.service.interfaces.CompteService;
 import ma.octo.assignement.service.interfaces.UtilisateurService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,17 +17,19 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 public class CompteTest {
 
-    @Autowired
-    CompteService compteService;
+
+    private final CompteService compteService;
+    private final UtilisateurService utilisateurService;
+    private final UtilisateurRepository utilisateurRepository;
 
     @Autowired
-    UtilisateurService utilisateurService;
-
-    @Autowired
-    UtilisateurRepository utilisateurRepository;
+    public CompteTest(CompteService compteService, UtilisateurService utilisateurService, UtilisateurRepository utilisateurRepository) {
+        this.compteService = compteService;
+        this.utilisateurService = utilisateurService;
+        this.utilisateurRepository = utilisateurRepository;
+    }
 
     @Test
     public void saveCompte() {

@@ -26,7 +26,7 @@ public class DepositMapper {
         moneyDeposit.setMontant(depositDto.getMontant());
         moneyDeposit.setCompteBeneficiaire(beneficiaiare);
         moneyDeposit.setDateExecution(depositDto.getDate());
-        moneyDeposit.setNom_prenom_emetteur(depositDto.getNom_prenom_emetteur());
+        moneyDeposit.setNomPrenomEmetteur(depositDto.getNomPrenomEmetteur());
 
         return moneyDeposit;
     }

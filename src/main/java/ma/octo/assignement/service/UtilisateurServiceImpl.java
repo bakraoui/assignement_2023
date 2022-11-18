@@ -17,7 +17,7 @@ import java.util.List;
 public class UtilisateurServiceImpl implements UtilisateurService {
 
 
-    private UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
     public UtilisateurServiceImpl(UtilisateurRepository utilisateurRepository) {
         this.utilisateurRepository = utilisateurRepository;

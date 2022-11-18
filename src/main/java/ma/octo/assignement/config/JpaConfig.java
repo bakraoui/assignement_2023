@@ -17,7 +17,8 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "ma.octo.assignement.repository")
+@EnableJpaRepositories(
+        basePackages = {"ma.octo.assignement.repository", "ma.octo.assignement.security.repository"})
 public class JpaConfig {
 
     @Autowired
@@ -27,7 +28,9 @@ public class JpaConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan(new String[] { "ma.octo.assignement.domain" });
+        em.setPackagesToScan(
+                "ma.octo.assignement.domain",
+                "ma.octo.assignement.security.entity");
         em.setPersistenceUnitName("entityManager");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -46,8 +49,9 @@ public class JpaConfig {
 
     Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         return properties;
     }
+
 }

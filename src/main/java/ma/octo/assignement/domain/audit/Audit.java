@@ -15,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
+
 public abstract class Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,6 +24,6 @@ public abstract class Audit {
     @Column(length = 100)
     private String message;
 
-    @Enumerated(EnumType.STRING)
-    private EventType eventType;
+    // @Enumerated(EnumType.STRING)
+    // private EventType eventType;
 }

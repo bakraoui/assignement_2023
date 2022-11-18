@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class DepositDto extends OperationDto {
 
-    private String nom_prenom_emetteur;
+    private String nomPrenomEmetteur;
 }

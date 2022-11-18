@@ -1,13 +1,10 @@
 package ma.octo.assignement.service;
 
 import ma.octo.assignement.domain.audit.Audit;
-import ma.octo.assignement.domain.audit.AuditDeposit;
-import ma.octo.assignement.domain.audit.AuditTransfer;
-import ma.octo.assignement.domain.util.EventType;
+import ma.octo.assignement.exceptions.AuditNonValideException;
 import ma.octo.assignement.repository.AuditRepository;
 import ma.octo.assignement.service.interfaces.AuditService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,8 +13,6 @@ import javax.transaction.Transactional;
 @Transactional
 public class AuditServiceImpl implements AuditService {
 
-    Logger LOGGER = LoggerFactory.getLogger(AuditServiceImpl.class);
-
     private final AuditRepository auditRepository;
 
     public AuditServiceImpl( AuditRepository auditRepository) {
@@ -25,24 +20,14 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public void auditTransfer(String message) {
+    public void createAudit(Audit audit) {
+        String message = audit.getMessage();
 
-        LOGGER.info("Audit de l'événement {}", EventType.TRANSFER);
+        if (message == null || message.equals(""))
+            throw new AuditNonValideException("Ajouter une description a l'audit");
 
-        Audit audit = new AuditTransfer();
-        audit.setEventType(EventType.TRANSFER);
-        audit.setMessage(message);
         auditRepository.save(audit);
     }
 
-    @Override
-    public void auditDeposit(String message) {
 
-        LOGGER.info("Audit de l'événement {}", EventType.DEPOSIT);
-
-        Audit audit = new AuditDeposit();
-        audit.setEventType(EventType.DEPOSIT);
-        audit.setMessage(message);
-        auditRepository.save(audit);
-    }
 }

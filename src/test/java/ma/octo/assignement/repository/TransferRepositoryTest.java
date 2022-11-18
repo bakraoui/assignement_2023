@@ -2,7 +2,6 @@ package ma.octo.assignement.repository;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.domain.audit.Audit;
 import ma.octo.assignement.domain.operation.Transfer;
 import ma.octo.assignement.dto.CompteDto;
 import ma.octo.assignement.dto.TransferDto;
@@ -10,8 +9,6 @@ import ma.octo.assignement.dto.UtilisateurDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;
 import ma.octo.assignement.exceptions.TransactionException;
-import ma.octo.assignement.service.CompteServiceImpl;
-import ma.octo.assignement.service.TransferServiceImpl;
 import ma.octo.assignement.service.interfaces.CompteService;
 import ma.octo.assignement.service.interfaces.TransferService;
 import ma.octo.assignement.service.interfaces.UtilisateurService;
@@ -28,15 +25,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // @ExtendWith(SpringExtension.class)
 @SpringBootTest
-// @Transactional
 public class TransferRepositoryTest {
 
+  private final CompteService compteService;
+  private final UtilisateurService utilisateurService;
+  private final TransferService transferService;
+
   @Autowired
-  CompteService compteService;
-  @Autowired
-  UtilisateurService utilisateurService;
-  @Autowired
-  private TransferService transferService;
+  public TransferRepositoryTest(CompteService compteService, UtilisateurService utilisateurService, TransferService transferService) {
+    this.compteService = compteService;
+    this.utilisateurService = utilisateurService;
+    this.transferService = transferService;
+  }
 
   @Test
   public void save() throws TransactionException, CompteNonExistantException, SoldeDisponibleInsuffisantException {

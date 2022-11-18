@@ -1,7 +1,8 @@
 package ma.octo.assignement.service;
 
 import ma.octo.assignement.domain.Compte;
-import ma.octo.assignement.domain.operation.Operation;
+import ma.octo.assignement.domain.audit.Audit;
+import ma.octo.assignement.domain.audit.AuditTransfer;
 import ma.octo.assignement.domain.operation.Transfer;
 import ma.octo.assignement.dto.TransferDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
@@ -13,10 +14,10 @@ import ma.octo.assignement.repository.CompteRepository;
 import ma.octo.assignement.repository.TransferRepository;
 import ma.octo.assignement.service.interfaces.AuditService;
 import ma.octo.assignement.service.interfaces.TransferService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,8 +29,6 @@ import static ma.octo.assignement.service.validators.OperationValidator.Validati
 @Transactional
 public class TransferServiceImpl implements TransferService {
 
-    public static final int MONTANT_MAXIMAL = 10000;
-    Logger LOGGER = LoggerFactory.getLogger(TransferServiceImpl.class);
 
 
     private final CompteRepository compteRepository;
@@ -57,23 +56,26 @@ public class TransferServiceImpl implements TransferService {
     public Transfer createTransaction(TransferDto transferDto)
             throws CompteNonExistantException, TransactionException, SoldeDisponibleInsuffisantException {
 
-        Compte emetteur = compteRepository.findByNrCompte(transferDto.getNrCompteEmetteur());
-        Compte beneficiaire = compteRepository.findByNrCompte(transferDto.getNrCompteBeneficiaire());
-
-        if (emetteur == null) {
-            throw new CompteNonExistantException("Compte Non existant");
-        }
-
-        if (beneficiaire == null) {
-            throw new CompteNonExistantException("Compte Non existant");
-        }
-
-        ValidationResult result = isMontantNonVide()
+        ValidationResult result = isNumeroCompteNonValide()
+                .and(isMontantNonVide())
                 .and(isMontantNonAtteind())
                 .and(isMontantDepasse())
                 .and(isMotifValid())
-                .and(isMontantSuffisant(emetteur.getSolde()))
                 .apply(transferDto);
+
+        if (!result.equals(SUCCES))
+            throw new  TransactionException(result.getType());
+
+
+
+        Compte emetteur = compteRepository.findByNrCompte(transferDto.getNrCompteEmetteur());
+        Compte beneficiaire = compteRepository.findByNrCompte(transferDto.getNrCompteBeneficiaire());
+
+        if (emetteur == null || beneficiaire == null) {
+            throw new CompteNonExistantException("Compte Non existant, verifiez bien les deux numeros de comptes");
+        }
+
+         result = isMontantSuffisant(emetteur.getSolde()).apply(transferDto);
 
         if (!result.equals(SUCCES))
             throw new  TransactionException(result.getType());
@@ -93,9 +95,12 @@ public class TransferServiceImpl implements TransferService {
         transferRepository.save(transfer);
 
         // save an audit transfer
-        auditService.auditTransfer("Transfer depuis " + transferDto.getNrCompteEmetteur() + " vers " + transferDto
+        Audit audit = new AuditTransfer();
+        String message = "Transfer depuis " + transferDto.getNrCompteEmetteur() + " vers " + transferDto
                 .getNrCompteBeneficiaire() + " d'un montant de " + transferDto.getMontant()
-                .toString());
+                .toString();
+        audit.setMessage(message);
+        auditService.createAudit(audit);
 
         return transfer;
 

@@ -8,11 +8,12 @@ import java.util.function.Function;
 import static ma.octo.assignement.service.validators.OperationValidator.ValidationResult;
 import static ma.octo.assignement.service.validators.OperationValidator.ValidationResult.*;
 
-import static ma.octo.assignement.service.TransferServiceImpl.MONTANT_MAXIMAL;
+import static ma.octo.assignement.service.utils.Constant.MONTANT_MAXIMAL;
 
 public interface OperationValidator extends Function<OperationDto, ValidationResult> {
 
     enum ValidationResult {
+        NUMERO_COMPTE_NON_VALIDE("numero de compte saisi non valide"),
         MONTANT_VIDE("Montant vide"),
         MONTANT_MINIMAL_NON_ATTEIND("Montant minimal de transfer non atteint"),
         MONTANT_MAXIMAL_DEPASSE("Montant maximal de transfer dépassé"),
@@ -28,6 +29,14 @@ public interface OperationValidator extends Function<OperationDto, ValidationRes
         public String getType() {
             return type;
         }
+    }
+
+    static OperationValidator isNumeroCompteNonValide() {
+        return operationDto ->
+                operationDto.getNrCompteBeneficiaire() == null
+                        || operationDto.getNrCompteBeneficiaire().equals("")
+                        || !operationDto.getNrCompteBeneficiaire().matches("[!-_+=\\.\\;!@]")?
+                        NUMERO_COMPTE_NON_VALIDE : SUCCES;
     }
 
     static OperationValidator isMontantNonVide() {
@@ -47,7 +56,7 @@ public interface OperationValidator extends Function<OperationDto, ValidationRes
     }
 
     static OperationValidator isMotifValid() {
-        return operationDto -> operationDto.getMotif() ==null || operationDto.getMotif().length() == 0 ? MOTIF_VIDE : SUCCES;
+        return operationDto -> operationDto.getMotif() == null || operationDto.getMotif().length() == 0 ? MOTIF_VIDE : SUCCES;
     }
 
 

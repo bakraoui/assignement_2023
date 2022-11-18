@@ -19,15 +19,15 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class JwtAuthorisationFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
-
+        // Bearer jwt
         if (authorization != null && authorization.startsWith("Bearer ")) {
 
             try {
-
                 //  get token
                 String jwt_token = authorization.substring("Bearer ".length());
 
@@ -39,11 +39,13 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
                 // get data from token
                 String username = decodedJWT.getSubject();
                 String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+
                 Collection<SimpleGrantedAuthority> authorities = Arrays.stream(roles)
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
                 // authenticate
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(username, null, authorities);
+
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
                 // pass to next filter

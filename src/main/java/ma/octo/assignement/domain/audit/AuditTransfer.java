@@ -6,6 +6,6 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "AUDIT_T")
+@Table(name = "AUDIT_TRANSFER")
 public class AuditTransfer extends Audit {
 }

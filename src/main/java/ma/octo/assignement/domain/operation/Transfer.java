@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Data
 @ToString
 @Builder
-@Table(name = "TRAN")
+@Table(name = "TRANSFER")
 public class Transfer extends Operation{
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

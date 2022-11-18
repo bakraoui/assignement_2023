@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -51,7 +52,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain chain,
-            Authentication authResult) throws IOException, ServletException {
+            Authentication authResult) throws IOException {
 
         // if authentication success do this
 
@@ -61,12 +62,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // generate JWT
         Algorithm algorithm = Algorithm.HMAC256("assignement_2023_OCTO"); // algo for signature, take a secret key
+
         String jwt_access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 15*60*1000) )
                 .withIssuer(request.getRequestURI())
-                .withClaim("roles", user.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toList()))
+                .withClaim("roles",
+                        user.getAuthorities().stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
                 .sign(algorithm);
 
         // refresh token : to get new token when jwt_access_token expired
@@ -78,11 +83,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(algorithm);
 
 
-        // response.setHeader("Authorization",jwt_access_token);
+        // response.setHeader("access_token",jwt_access_token);
+        // response.setHeader("refresh_token",jwt_access_token);
 
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", jwt_access_token);
 
+        tokens.put("access_token", jwt_access_token);
         tokens.put("refresh_token", jwt_refresh_token);
 
         response.setContentType("application/json");

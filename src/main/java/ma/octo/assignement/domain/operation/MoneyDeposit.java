@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Data
 @ToString
-@Table(name = "DEP")
+@Table(name = "DEPOSIT")
 @Builder
 public class MoneyDeposit extends Operation{
 

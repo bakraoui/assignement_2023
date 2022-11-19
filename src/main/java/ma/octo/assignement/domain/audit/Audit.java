@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ma.octo.assignement.domain.operation.Operation;
 import ma.octo.assignement.domain.util.EventType;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import javax.persistence.*;
 @Data
 
 public abstract class Audit {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -24,6 +26,4 @@ public abstract class Audit {
     @Column(length = 100)
     private String message;
 
-    // @Enumerated(EnumType.STRING)
-    // private EventType eventType;
 }

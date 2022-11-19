@@ -15,7 +15,8 @@ import java.util.Date;
 @Data
 @Builder
 @Table(name = "UTILISATEUR")
-public class Utilisateur implements Serializable {
+public class Utilisateur  {
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;

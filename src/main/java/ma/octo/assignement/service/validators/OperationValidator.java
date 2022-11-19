@@ -35,7 +35,7 @@ public interface OperationValidator extends Function<OperationDto, ValidationRes
         return operationDto ->
                 operationDto.getNrCompteBeneficiaire() == null
                         || operationDto.getNrCompteBeneficiaire().equals("")
-                        || !operationDto.getNrCompteBeneficiaire().matches("[!-_+=\\.\\;!@]")?
+                        || operationDto.getNrCompteBeneficiaire().matches("[!-_+=\\.\\;!@]")?
                         NUMERO_COMPTE_NON_VALIDE : SUCCES;
     }
 

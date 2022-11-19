@@ -62,9 +62,7 @@ public class DepositTest {
         depositDto.setMotif("Deposit de Ayoub Bakraoui");
         depositService.createTransaction(depositDto);
 
-
         // THEN
-
         Compte beneficiaire = compteService.getCompte("010000F000001000");
 
         assertThat(beneficiaire.getSolde())

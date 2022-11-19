@@ -8,7 +8,6 @@ public class CompteMapper {
 
 
     public static CompteDto map(Compte compte){
-
         CompteDto compteDto = new CompteDto();
 
         compteDto.setNrCompte(compte.getNrCompte());
@@ -18,7 +17,6 @@ public class CompteMapper {
 
         return compteDto;
     }
-
 
     public static Compte toCompte(CompteDto compteDto, Utilisateur utilisateur){
         Compte compte = new Compte();

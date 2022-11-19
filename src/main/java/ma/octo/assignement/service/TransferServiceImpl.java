@@ -35,7 +35,9 @@ public class TransferServiceImpl implements TransferService {
     private final TransferRepository transferRepository;
     private final AuditService auditService;
 
-    public TransferServiceImpl(CompteRepository compteRepository, TransferRepository transferRepository, AuditService monservice) {
+    public TransferServiceImpl(CompteRepository compteRepository,
+                               TransferRepository transferRepository,
+                               AuditService monservice) {
         this.compteRepository = compteRepository;
         this.transferRepository = transferRepository;
         this.auditService = monservice;

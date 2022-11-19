@@ -67,17 +67,19 @@ public class DepositServiceImpl implements DepositService {
         beneficiaire.setSolde(beneficiaire.getSolde().add(depositDto.getMontant()));
         compteRepository.save(beneficiaire);
 
-        // create new deposit
-        MoneyDeposit moneyDeposit = DepositMapper.toMoneyDeposit(depositDto, beneficiaire);
-        depositRepository.save(moneyDeposit);
-
         // create an audit
         Audit audit = new AuditDeposit();
         String message = "Deposit fait par " + depositDto.getNomPrenomEmetteur() + " vers "
                 + depositDto.getNrCompteBeneficiaire() + " d'un montant de " + depositDto.getMontant()
                 .toString();
         audit.setMessage(message);
-        auditService.createAudit(audit);
+        Audit savedAudit = auditService.createAudit(audit);
+
+        // create new deposit
+        MoneyDeposit moneyDeposit = DepositMapper.toMoneyDeposit(depositDto, beneficiaire);
+        depositRepository.save(moneyDeposit);
+
+
 
     }
 }

@@ -9,12 +9,13 @@ import ma.octo.assignement.domain.Utilisateur;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompteDto {
+public class CompteDto implements Serializable {
 
     private String nrCompte;
     private String rib;

@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/comptes")
 public class CompteController {
 
-    private CompteService compteService;
+    private final CompteService compteService;
 
     public CompteController(CompteService compteService) {
         this.compteService = compteService;

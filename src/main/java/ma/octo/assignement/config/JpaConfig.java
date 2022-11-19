@@ -19,6 +19,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = {"ma.octo.assignement.repository", "ma.octo.assignement.security.repository"})
+
 public class JpaConfig {
 
     @Autowired

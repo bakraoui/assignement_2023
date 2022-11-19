@@ -21,9 +21,9 @@ import java.math.RoundingMode;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // @ExtendWith(SpringExtension.class)
+
 @SpringBootTest
 public class TransferRepositoryTest {
 
@@ -80,7 +80,6 @@ public class TransferRepositoryTest {
     transferDto.setNrCompteBeneficiaire("010000B000001000");
 
     Transfer transfer = transferService.createTransaction(transferDto);
-
 
     Compte compteEmetteur = compteService.getCompte("010000E025001000");
     Compte compteBeneficiaire = compteService.getCompte("010000B000001000");

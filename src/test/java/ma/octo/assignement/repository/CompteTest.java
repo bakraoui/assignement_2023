@@ -81,6 +81,8 @@ public class CompteTest {
     @Test
     public void allComptes() {
 
+        Compte compte = compteService.getCompte("010000G000001000");
+
         // given
         Utilisateur utilisateur1 = new Utilisateur();
         utilisateur1.setUsername("userC");

@@ -19,5 +19,6 @@ public class AppUser {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
     private Collection<AppRole> roles;
 }

@@ -19,6 +19,7 @@ public class Compte {
   @Column(length = 16, unique = true)
   private String nrCompte;
 
+  @Column(unique = true)
   private String rib;
 
   @Column(precision = 16, scale = 2)

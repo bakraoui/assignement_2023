@@ -1,6 +1,8 @@
 package ma.octo.assignement.security.services;
 
-import ma.octo.assignement.security.entity.AppUser;
+import ma.octo.assignement.domain.Utilisateur;
+import ma.octo.assignement.repository.UtilisateurRepository;
+import ma.octo.assignement.service.interfaces.UtilisateurService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,15 +17,18 @@ import java.util.stream.Collectors;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final AppUserService appUserService;
+//    private final UtilisateurService utilisateurService;
 
-    public UserDetailsServiceImpl(AppUserService appUserService) {
-        this.appUserService = appUserService;
+    private final UtilisateurRepository utilisateurRepository;
+    public UserDetailsServiceImpl(UtilisateurRepository utilisateurRepository) {
+        this.utilisateurRepository = utilisateurRepository;
+
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser appUser = appUserService.loadUserByUsername(username);
+        Utilisateur appUser = utilisateurRepository.findByUsername(username);
+
         Collection<GrantedAuthority> authorities = appUser.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
 

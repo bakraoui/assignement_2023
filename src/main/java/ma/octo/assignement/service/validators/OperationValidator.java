@@ -1,6 +1,6 @@
 package ma.octo.assignement.service.validators;
 
-import ma.octo.assignement.dto.OperationDto;
+import ma.octo.assignement.dto.operationDto.OperationDto;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
@@ -58,9 +58,6 @@ public interface OperationValidator extends Function<OperationDto, ValidationRes
     static OperationValidator isMotifValid() {
         return operationDto -> operationDto.getMotif() == null || operationDto.getMotif().length() == 0 ? MOTIF_VIDE : SUCCES;
     }
-
-
-
 
     default OperationValidator and (OperationValidator other) {
         return operationDto -> {

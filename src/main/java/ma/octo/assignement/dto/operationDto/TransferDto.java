@@ -1,11 +1,8 @@
-package ma.octo.assignement.dto;
+package ma.octo.assignement.dto.operationDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor

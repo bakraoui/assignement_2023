@@ -1,4 +1,4 @@
-package ma.octo.assignement.security.entity;
+package ma.octo.assignement.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

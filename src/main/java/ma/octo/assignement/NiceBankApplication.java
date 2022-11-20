@@ -1,12 +1,8 @@
 package ma.octo.assignement;
 
-import ma.octo.assignement.repository.CompteRepository;
-import ma.octo.assignement.repository.UtilisateurRepository;
-import ma.octo.assignement.repository.TransferRepository;
-import ma.octo.assignement.security.entity.AppRole;
-import ma.octo.assignement.security.entity.AppUser;
-import ma.octo.assignement.security.services.AppUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import ma.octo.assignement.domain.AppRole;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
+import ma.octo.assignement.service.interfaces.UtilisateurService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,19 +25,34 @@ public class NiceBankApplication {
 	}
 
 	@Bean
-	CommandLineRunner start(AppUserService appUserService) {
+	CommandLineRunner start(UtilisateurService utilisateurService) {
 		return args -> {
 
-			appUserService.saveRole(new AppRole(null, "ADMIN"));
-			appUserService.saveRole(new AppRole(null, "USER"));
+			utilisateurService.saveRole(new AppRole(null, "ADMIN"));
+			utilisateurService.saveRole(new AppRole(null, "USER"));
 
-			appUserService.saveUser(new AppUser(null, "admin","1234",null));
-			appUserService.saveUser(new AppUser(null, "user","1234",null));
+			UtilisateurRequestDto admin = UtilisateurRequestDto.builder()
+					.firstname("firstname1")
+					.lastname("lastname1")
+					.gender("FEMALE")
+					.username("admin")
+					.password("1234")
+					.build();
+			utilisateurService.save(admin);
 
-			appUserService.addRoleToUser("USER","admin" );
-			appUserService.addRoleToUser("ADMIN","admin" );
+			UtilisateurRequestDto utilisateur = UtilisateurRequestDto.builder()
+					.firstname("firstname2")
+					.lastname("lastname 2")
+					.gender("MALE")
+					.username("user")
+					.password("1234")
+					.build();
+			utilisateurService.save(utilisateur);
 
-			appUserService.addRoleToUser("USER","user" );
+			utilisateurService.addRoleToUser("USER","admin" );
+			utilisateurService.addRoleToUser("ADMIN","admin" );
+
+			utilisateurService.addRoleToUser("USER","user" );
 		};
 	}
 

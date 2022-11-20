@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
-@ToString
 public class Compte {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

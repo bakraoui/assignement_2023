@@ -1,9 +1,10 @@
 package ma.octo.assignement.repository;
 
-import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.CompteDto;
-import ma.octo.assignement.dto.UtilisateurDto;
+import ma.octo.assignement.dto.compteDto.CompteRequestDto;
+import ma.octo.assignement.dto.compteDto.CompteResponseDto;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
 import ma.octo.assignement.service.interfaces.CompteService;
 import ma.octo.assignement.service.interfaces.UtilisateurService;
 import org.junit.jupiter.api.Test;
@@ -19,106 +20,80 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class CompteTest {
 
-
     private final CompteService compteService;
     private final UtilisateurService utilisateurService;
-    private final UtilisateurRepository utilisateurRepository;
-
     @Autowired
-    public CompteTest(CompteService compteService, UtilisateurService utilisateurService, UtilisateurRepository utilisateurRepository) {
+    public CompteTest(CompteService compteService, UtilisateurService utilisateurService) {
         this.compteService = compteService;
         this.utilisateurService = utilisateurService;
-        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Test
     public void saveCompte() {
         // GIVEN
-        UtilisateurDto utilisateurDto = new UtilisateurDto();
-        utilisateurDto.setUsername("userA");
-        utilisateurDto.setLastname("lastA");
-        utilisateurDto.setFirstname("firstA");
-        utilisateurDto.setGender("Male");
-        Utilisateur saveUtilisateur = utilisateurService.save(utilisateurDto);
+        UtilisateurRequestDto utilisateurRequestDto = new UtilisateurRequestDto();
+        utilisateurRequestDto.setUsername("userA");
+        utilisateurRequestDto.setPassword("aaaa");
+        utilisateurRequestDto.setLastname("lastA");
+        utilisateurRequestDto.setFirstname("firstA");
+        utilisateurRequestDto.setGender("Male");
+        UtilisateurResponseDto saveUtilisateur = utilisateurService.save(utilisateurRequestDto);
 
         // WHEN
-        CompteDto compteDto = new CompteDto();
-        compteDto.setNrCompte("010000A000001000");
-        compteDto.setRib("RIBA");
-        compteDto.setSolde(BigDecimal.valueOf(200000.0).setScale(2, RoundingMode.HALF_DOWN));
-        compteDto.setUtilisateurUsername(saveUtilisateur.getUsername());
-        Compte compte = compteService.save(compteDto);
+        CompteRequestDto compteRequestDto = new CompteRequestDto();
+        compteRequestDto.setNrCompte("010000A000001000");
+        compteRequestDto.setRib("RIBA");
+        compteRequestDto.setSolde(BigDecimal.valueOf(200000.0).setScale(2, RoundingMode.HALF_DOWN));
+        compteRequestDto.setUtilisateurUsername(saveUtilisateur.getUsername());
+        CompteResponseDto compte = compteService.save(compteRequestDto);
 
         // THEN
         assertThat(compte)
-                .isEqualTo(compteService.getCompte(compteDto.getNrCompte()));
+                .isEqualTo(compteService.getCompte(compteRequestDto.getNrCompte()));
 
-    }
-
-    @Test
-    public void getCompte() {
-        // GIVEN
-        UtilisateurDto utilisateurDto = new UtilisateurDto();
-        utilisateurDto.setUsername("userG");
-        utilisateurDto.setLastname("lastG");
-        utilisateurDto.setFirstname("firstG");
-        utilisateurDto.setGender("Male");
-        Utilisateur saveUtilisateur = utilisateurService.save(utilisateurDto);
-
-        // WHEN
-        CompteDto compteDto = new CompteDto();
-        compteDto.setNrCompte("010000G000001000");
-        compteDto.setRib("RIBG");
-        compteDto.setSolde(BigDecimal.valueOf(200000.0).setScale(2, RoundingMode.HALF_DOWN));
-        compteDto.setUtilisateurUsername(saveUtilisateur.getUsername());
-        Compte compte = compteService.save(compteDto);
-
-        // THEN
-        assertThat(compte)
-                .isEqualTo(compteService.getCompte(compteDto.getNrCompte()));
     }
 
     @Test
     public void allComptes() {
 
-        Compte compte = compteService.getCompte("010000G000001000");
-
         // given
-        Utilisateur utilisateur1 = new Utilisateur();
+        UtilisateurRequestDto utilisateur1 = new UtilisateurRequestDto();
         utilisateur1.setUsername("userC");
+        utilisateur1.setPassword("cccc");
         utilisateur1.setLastname("lastC");
         utilisateur1.setFirstname("firstC");
         utilisateur1.setGender("Male");
-        utilisateurRepository.save(utilisateur1);
-        Utilisateur savedUtilisateur1 = utilisateurRepository.findByUsername("userC");
+        utilisateurService.save(utilisateur1);
+        UtilisateurResponseDto savedUtilisateur1 = utilisateurService.loadUserByUsername("userC");
 
-        CompteDto compteDto1 = new CompteDto();
-        compteDto1.setNrCompte("010000C000001000");
-        compteDto1.setRib("RIBC");
-        compteDto1.setSolde(BigDecimal.valueOf(200000.0).setScale(2, RoundingMode.HALF_DOWN));
-        compteDto1.setUtilisateurUsername(savedUtilisateur1.getUsername());
-        compteService.save(compteDto1);
+        CompteRequestDto compteRequestDto1 = new CompteRequestDto();
+        compteRequestDto1.setNrCompte("010000C000001000");
+        compteRequestDto1.setRib("RIBC");
+        compteRequestDto1.setSolde(BigDecimal.valueOf(200000.0).setScale(2, RoundingMode.HALF_DOWN));
+        compteRequestDto1.setUtilisateurUsername(savedUtilisateur1.getUsername());
+        compteService.save(compteRequestDto1);
 
-        Utilisateur utilisateur2 = new Utilisateur();
+        UtilisateurRequestDto utilisateur2 = new UtilisateurRequestDto();
         utilisateur2.setUsername("userD");
+        utilisateur2.setPassword("dddd");
         utilisateur2.setLastname("lastD");
         utilisateur2.setFirstname("firstD");
         utilisateur2.setGender("Female");
-        utilisateurRepository.save(utilisateur2);
-        Utilisateur savedUtilisateur2 = utilisateurRepository.findByUsername("userD");
+        utilisateurService.save(utilisateur2);
+        UtilisateurResponseDto savedUtilisateur2 = utilisateurService.loadUserByUsername("userD");
 
-        CompteDto compteDto = new CompteDto();
-        compteDto.setNrCompte("010000D025001000");
-        compteDto.setRib("RIBD");
-        compteDto.setSolde(BigDecimal.valueOf(140000).setScale(2, RoundingMode.HALF_DOWN));
-        compteDto.setUtilisateurUsername(savedUtilisateur2.getUsername());
-        compteService.save(compteDto);
+        CompteRequestDto compteRequestDto = new CompteRequestDto();
+        compteRequestDto.setNrCompte("010000D025001000");
+        compteRequestDto.setRib("RIBD");
+        compteRequestDto.setSolde(BigDecimal.valueOf(140000).setScale(2, RoundingMode.HALF_DOWN));
+        compteRequestDto.setUtilisateurUsername(savedUtilisateur2.getUsername());
+        compteService.save(compteRequestDto);
 
-        Compte savedCompte1 = compteService.getCompte("010000C000001000");
-        Compte savedCompte2 = compteService.getCompte("010000D025001000");
+        CompteResponseDto savedCompte1 = compteService.getCompte("010000C000001000");
+        CompteResponseDto savedCompte2 = compteService.getCompte("010000D025001000");
 
         // when
-        List<Compte> comptes = compteService.allComptes();
+        List<CompteResponseDto> comptes = compteService.allComptes();
 
         // then
         assertThat(List.of(savedCompte1, savedCompte2))

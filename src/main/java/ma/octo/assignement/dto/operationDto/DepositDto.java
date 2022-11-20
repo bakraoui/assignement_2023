@@ -1,4 +1,4 @@
-package ma.octo.assignement.dto;
+package ma.octo.assignement.dto.operationDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class DepositDto extends OperationDto {
 
     private String nomPrenomEmetteur;
+    private String rib;
 }

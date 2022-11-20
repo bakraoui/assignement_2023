@@ -2,21 +2,16 @@ package ma.octo.assignement.domain.audit;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ma.octo.assignement.domain.operation.Operation;
-import ma.octo.assignement.domain.util.EventType;
 
 import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
-
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-
 public abstract class Audit {
 
     @Id

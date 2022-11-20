@@ -2,28 +2,29 @@ package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.CompteDto;
+import ma.octo.assignement.dto.compteDto.CompteRequestDto;
+import ma.octo.assignement.dto.compteDto.CompteResponseDto;
 
 public class CompteMapper {
 
 
-    public static CompteDto map(Compte compte){
-        CompteDto compteDto = new CompteDto();
+    public static CompteResponseDto map(Compte compte){
+        CompteResponseDto compteResponseDto = new CompteResponseDto();
 
-        compteDto.setNrCompte(compte.getNrCompte());
-        compteDto.setRib(compte.getRib());
-        compteDto.setSolde(compte.getSolde());
-        compteDto.setUtilisateurUsername(compte.getUtilisateur().getUsername());
+        compteResponseDto.setNrCompte(compte.getNrCompte());
+        compteResponseDto.setRib(compte.getRib());
+        compteResponseDto.setSolde(compte.getSolde());
+        compteResponseDto.setUtilisateurUsername(compte.getUtilisateur().getUsername());
 
-        return compteDto;
+        return compteResponseDto;
     }
 
-    public static Compte toCompte(CompteDto compteDto, Utilisateur utilisateur){
+    public static Compte toCompte(CompteRequestDto compteRequestDto, Utilisateur utilisateur){
         Compte compte = new Compte();
 
-        compte.setNrCompte(compteDto.getNrCompte());
-        compte.setRib(compteDto.getRib());
-        compte.setSolde(compteDto.getSolde());
+        compte.setNrCompte(compteRequestDto.getNrCompte());
+        compte.setRib(compteRequestDto.getRib());
+        compte.setSolde(compteRequestDto.getSolde());
         compte.setUtilisateur(utilisateur);
 
         return compte;

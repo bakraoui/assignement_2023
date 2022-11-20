@@ -1,11 +1,10 @@
 package ma.octo.assignement.web;
 
 import ma.octo.assignement.domain.operation.Transfer;
-import ma.octo.assignement.dto.TransferDto;
+import ma.octo.assignement.dto.operationDto.TransferDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;
 import ma.octo.assignement.exceptions.TransactionException;
-import ma.octo.assignement.service.TransferServiceImpl;
 import ma.octo.assignement.service.interfaces.TransferService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ class TransferController {
     }
 
     @GetMapping
-    List<Transfer> loadAll() {
+    List<TransferDto> loadAll() {
         LOGGER.info("Lister des utilisateurs");
         return transferService.allTransfer();
     }

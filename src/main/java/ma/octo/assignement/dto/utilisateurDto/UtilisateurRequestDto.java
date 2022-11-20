@@ -1,6 +1,7 @@
-package ma.octo.assignement.dto;
+package ma.octo.assignement.dto.utilisateurDto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,9 +11,11 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UtilisateurDto implements Serializable {
+@Builder
+public class UtilisateurRequestDto implements Serializable {
 
     private String username;
+    private String password;
     private String gender;
     private String lastname;
     private String firstname;

@@ -9,9 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@ToString
 @Table(name = "DEPOSIT")
-@Builder
 public class MoneyDeposit extends Operation{
 
   @Id

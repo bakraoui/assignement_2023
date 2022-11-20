@@ -1,9 +1,9 @@
 package ma.octo.assignement.web;
 
-import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.UtilisateurDto;
-import ma.octo.assignement.service.UtilisateurServiceImpl;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
 import ma.octo.assignement.service.interfaces.UtilisateurService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +19,13 @@ public class UtilisateurController {
     }
 
     @PostMapping
-    public void save(@RequestBody UtilisateurDto utilisateurDto) {
-        utilisateurService.save(utilisateurDto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void save(@RequestBody UtilisateurRequestDto utilisateurRequestDto) {
+        utilisateurService.save(utilisateurRequestDto);
     }
 
-    @GetMapping("")
-    List<Utilisateur> loadAllUtilisateur() {
+    @GetMapping
+    List<UtilisateurResponseDto> loadAllUtilisateur() {
         return utilisateurService.allUtilisateurs();
     }
 }

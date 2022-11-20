@@ -1,10 +1,9 @@
 package ma.octo.assignement.web;
 
-import ma.octo.assignement.domain.Compte;
+import ma.octo.assignement.dto.compteDto.CompteRequestDto;
+import ma.octo.assignement.dto.compteDto.CompteResponseDto;
 import ma.octo.assignement.service.interfaces.CompteService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,8 +17,15 @@ public class CompteController {
         this.compteService = compteService;
     }
 
-    @GetMapping("")
-    List<Compte> loadAllComptes() {
+    @GetMapping
+    List<CompteResponseDto> loadAllComptes() {
         return compteService.allComptes();
     }
+
+
+    @PostMapping
+    public CompteResponseDto save(@RequestBody CompteRequestDto compteRequestDto){
+        return compteService.save(compteRequestDto);
+    }
+
 }

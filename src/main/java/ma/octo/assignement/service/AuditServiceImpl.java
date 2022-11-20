@@ -21,12 +21,9 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     public Audit createAudit(Audit audit) {
-
         String message = audit.getMessage();
-
         if (message == null || message.equals(""))
             throw new AuditNonValideException("Ajouter une description a l'audit");
-
         return auditRepository.save(audit);
     }
 

@@ -1,11 +1,11 @@
 package ma.octo.assignement.service.validators;
 
-import ma.octo.assignement.dto.CompteDto;
+import ma.octo.assignement.dto.compteDto.CompteRequestDto;
 
 import java.util.function.Function;
 import static ma.octo.assignement.service.validators.CompteValidator.*;
 import static ma.octo.assignement.service.validators.CompteValidator.ValidationResult.*;
-public interface CompteValidator extends Function<CompteDto, ValidationResult> {
+public interface CompteValidator extends Function<CompteRequestDto, ValidationResult> {
 
     enum ValidationResult {
         NB_COMPTE_INVALIDE("Numero de compte est invalide"),

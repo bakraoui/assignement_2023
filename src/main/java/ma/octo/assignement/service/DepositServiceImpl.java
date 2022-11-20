@@ -4,7 +4,7 @@ import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.audit.Audit;
 import ma.octo.assignement.domain.audit.AuditDeposit;
 import ma.octo.assignement.domain.operation.MoneyDeposit;
-import ma.octo.assignement.dto.DepositDto;
+import ma.octo.assignement.dto.operationDto.DepositDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.TransactionException;
 import ma.octo.assignement.mapper.DepositMapper;
@@ -19,6 +19,7 @@ import static ma.octo.assignement.service.validators.OperationValidator.*;
 import static  ma.octo.assignement.service.validators.OperationValidator.ValidationResult.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,12 +38,15 @@ public class DepositServiceImpl implements DepositService {
 
 
     @Override
-    public List<MoneyDeposit> loadAll() {
-        return depositRepository.findAll() ;
+    public List<DepositDto> loadAll() {
+        return depositRepository.findAll()
+                .stream().map(DepositMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void createTransaction(DepositDto depositDto) throws TransactionException, CompteNonExistantException {
+    public void createTransaction(DepositDto depositDto)
+            throws TransactionException, CompteNonExistantException {
 
         ValidationResult result = isNumeroCompteNonValide()
                 .and(isMontantNonVide())
@@ -56,12 +60,15 @@ public class DepositServiceImpl implements DepositService {
 
 
         Compte beneficiaire = compteRepository
-                .findByNrCompte(depositDto.getNrCompteBeneficiaire());
+                .findByRib(depositDto.getRib());
 
         if (beneficiaire == null) {
             throw new CompteNonExistantException("Compte beneficiaire non Existant");
         }
 
+        // create new deposit
+        MoneyDeposit moneyDeposit = DepositMapper.toMoneyDeposit(depositDto, beneficiaire);
+        depositRepository.save(moneyDeposit);
 
         // update receiver's sold
         beneficiaire.setSolde(beneficiaire.getSolde().add(depositDto.getMontant()));
@@ -70,14 +77,12 @@ public class DepositServiceImpl implements DepositService {
         // create an audit
         Audit audit = new AuditDeposit();
         String message = "Deposit fait par " + depositDto.getNomPrenomEmetteur() + " vers "
-                + depositDto.getNrCompteBeneficiaire() + " d'un montant de " + depositDto.getMontant()
-                .toString();
-        audit.setMessage(message);
-        Audit savedAudit = auditService.createAudit(audit);
+                + depositDto.getNrCompteBeneficiaire() + " d'un montant de "
+                + depositDto.getMontant().toString();
 
-        // create new deposit
-        MoneyDeposit moneyDeposit = DepositMapper.toMoneyDeposit(depositDto, beneficiaire);
-        depositRepository.save(moneyDeposit);
+        audit.setMessage(message);
+        auditService.createAudit(audit);
+
 
 
 

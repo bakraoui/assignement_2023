@@ -7,4 +7,4 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "AUDIT_TRANSFER")
-public class AuditTransfer extends Audit { }
+public class AuditTransfer extends Audit {}

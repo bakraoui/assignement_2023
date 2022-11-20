@@ -9,8 +9,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@ToString
-@Builder
 @Table(name = "TRANSFER")
 public class Transfer extends Operation{
   @Id
@@ -19,6 +17,4 @@ public class Transfer extends Operation{
 
   @ManyToOne
   private Compte compteEmetteur;
-
-
 }

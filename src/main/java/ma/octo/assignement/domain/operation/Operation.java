@@ -2,7 +2,6 @@ package ma.octo.assignement.domain.operation;
 
 import lombok.*;
 import ma.octo.assignement.domain.Compte;
-import ma.octo.assignement.domain.audit.Audit;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -12,7 +11,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@ToString
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Operation {
     @Id
@@ -34,7 +32,4 @@ public abstract class Operation {
 
     @Column(length = 200)
     private String motif;
-
-
-
 }

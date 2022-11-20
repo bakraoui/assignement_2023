@@ -1,11 +1,10 @@
 package ma.octo.assignement.repository;
 
-import ma.octo.assignement.domain.Compte;
-import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.domain.operation.Transfer;
-import ma.octo.assignement.dto.CompteDto;
-import ma.octo.assignement.dto.TransferDto;
-import ma.octo.assignement.dto.UtilisateurDto;
+import ma.octo.assignement.dto.compteDto.CompteRequestDto;
+import ma.octo.assignement.dto.compteDto.CompteResponseDto;
+import ma.octo.assignement.dto.operationDto.TransferDto;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;
 import ma.octo.assignement.exceptions.TransactionException;
@@ -42,57 +41,62 @@ public class TransferRepositoryTest {
   public void save() throws TransactionException, CompteNonExistantException, SoldeDisponibleInsuffisantException {
 
     // Creer un Compte Beneficiaire avec utilisateur beneficiaire
-    UtilisateurDto utilisateurDtoBeneficiaire = new UtilisateurDto();
-    utilisateurDtoBeneficiaire.setUsername("userB");
-    utilisateurDtoBeneficiaire.setLastname("lastB");
-    utilisateurDtoBeneficiaire.setFirstname("firstB");
-    utilisateurDtoBeneficiaire.setGender("Male");
-    Utilisateur utilisateurBeneficiaire = utilisateurService.save(utilisateurDtoBeneficiaire);
+    UtilisateurRequestDto utilisateurRequestDtoBeneficiaire = new UtilisateurRequestDto();
+    utilisateurRequestDtoBeneficiaire.setUsername("userB");
+    utilisateurRequestDtoBeneficiaire.setPassword("bbbb");
+    utilisateurRequestDtoBeneficiaire.setLastname("lastB");
+    utilisateurRequestDtoBeneficiaire.setFirstname("firstB");
+    utilisateurRequestDtoBeneficiaire.setGender("Male");
+    UtilisateurResponseDto utilisateurBeneficiaire = utilisateurService.save(utilisateurRequestDtoBeneficiaire);
 
-    CompteDto compteDtoBeneficiaire = new CompteDto();
-    compteDtoBeneficiaire.setNrCompte("010000B000001000");
-    compteDtoBeneficiaire.setRib("RIBB");
-    compteDtoBeneficiaire.setSolde(BigDecimal.valueOf(200000.0).setScale(2, RoundingMode.HALF_DOWN));
-    compteDtoBeneficiaire.setUtilisateurUsername(utilisateurBeneficiaire.getUsername());
-    compteService.save(compteDtoBeneficiaire);
+    CompteRequestDto compteRequestDtoBeneficiaire = new CompteRequestDto();
+    compteRequestDtoBeneficiaire.setNrCompte("010000B000001000");
+    compteRequestDtoBeneficiaire.setRib("RIBB");
+    compteRequestDtoBeneficiaire.setSolde(BigDecimal.valueOf(200_000.0).setScale(2, RoundingMode.HALF_DOWN));
+    compteRequestDtoBeneficiaire.setUtilisateurUsername(utilisateurBeneficiaire.getUsername());
+    compteService.save(compteRequestDtoBeneficiaire);
 
     // Creer un Compte Emetteur avec utilisateur emetteur
-    UtilisateurDto utilisateurDtoEmetteur = new UtilisateurDto();
-    utilisateurDtoEmetteur.setUsername("userE");
-    utilisateurDtoEmetteur.setLastname("lastE");
-    utilisateurDtoEmetteur.setFirstname("firstE");
-    utilisateurDtoEmetteur.setGender("Female");
-    Utilisateur utilisateurEmetteur = utilisateurService.save(utilisateurDtoEmetteur);
+    UtilisateurRequestDto utilisateurRequestDtoEmetteur = new UtilisateurRequestDto();
+    utilisateurRequestDtoEmetteur.setUsername("userE");
+    utilisateurRequestDtoEmetteur.setPassword("eeee");
+    utilisateurRequestDtoEmetteur.setLastname("lastE");
+    utilisateurRequestDtoEmetteur.setFirstname("firstE");
+    utilisateurRequestDtoEmetteur.setGender("Female");
+    UtilisateurResponseDto utilisateurEmetteur = utilisateurService.save(utilisateurRequestDtoEmetteur);
 
-    CompteDto compteDtoEmetteur = new CompteDto();
-    compteDtoEmetteur.setNrCompte("010000E025001000");
-    compteDtoEmetteur.setRib("RIBE");
-    compteDtoEmetteur.setSolde(BigDecimal.valueOf(140000).setScale(2, RoundingMode.HALF_DOWN));
-    compteDtoEmetteur.setUtilisateurUsername(utilisateurEmetteur.getUsername());
-    compteService.save(compteDtoEmetteur);
+    CompteRequestDto compteRequestDtoEmetteur = new CompteRequestDto();
+    compteRequestDtoEmetteur.setNrCompte("010000E025001000");
+    compteRequestDtoEmetteur.setRib("RIBE");
+    compteRequestDtoEmetteur.setSolde(BigDecimal.valueOf(140_000).setScale(2, RoundingMode.HALF_DOWN));
+    compteRequestDtoEmetteur.setUtilisateurUsername(utilisateurEmetteur.getUsername());
+    compteService.save(compteRequestDtoEmetteur);
 
     // creer un transfer
     TransferDto transferDto = new TransferDto();
     transferDto.setMotif("TRANSFERT D'ARGENT");
-    transferDto.setMontant(BigDecimal.valueOf(10000));
+    transferDto.setMontant(BigDecimal.valueOf(10_000));
     transferDto.setDate(new Date());
     transferDto.setNrCompteEmetteur("010000E025001000");
     transferDto.setNrCompteBeneficiaire("010000B000001000");
 
-    Transfer transfer = transferService.createTransaction(transferDto);
+    transferService.createTransaction(transferDto);
 
-    Compte compteEmetteur = compteService.getCompte("010000E025001000");
-    Compte compteBeneficiaire = compteService.getCompte("010000B000001000");
+    CompteResponseDto compteEmetteur = compteService.getCompte("010000E025001000");
+    CompteResponseDto compteBeneficiaire = compteService.getCompte("010000B000001000");
 
     // THEN
 
     // soldEmetteur = oldSoldEmetteur - transferredMontant
-    assertThat(compteEmetteur.getSolde())
-            .isEqualByComparingTo(compteDtoEmetteur.getSolde().subtract(transferDto.getMontant()));
+    // soldEmetteur = 140_000 - 10_000 = 130_000
+    assertThat(compteRequestDtoEmetteur.getSolde().subtract(transferDto.getMontant()))
+            .isEqualByComparingTo(compteEmetteur.getSolde());
 
     // soldBeneficiaire = oldSoldBeneficiaire + transferredMontant
-    assertThat(compteBeneficiaire.getSolde())
-            .isEqualByComparingTo(compteDtoBeneficiaire.getSolde().add(transferDto.getMontant()) );
+    // soldBeneficiaire = 200_000.0 + 10_000 = 210_000
+
+    assertThat(compteRequestDtoBeneficiaire.getSolde().add(transferDto.getMontant()) )
+            .isEqualByComparingTo(compteBeneficiaire.getSolde());
 
 
 

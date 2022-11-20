@@ -2,7 +2,7 @@ package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.operation.MoneyDeposit;
-import ma.octo.assignement.dto.DepositDto;
+import ma.octo.assignement.dto.operationDto.DepositDto;
 
 public class DepositMapper {
 
@@ -15,6 +15,7 @@ public class DepositMapper {
         depositDto.setDate(moneyDeposit.getDateExecution());
         depositDto.setMotif(moneyDeposit.getMotif());
         depositDto.setMontant(moneyDeposit.getMontant());
+        depositDto.setRib(moneyDeposit.getCompteBeneficiaire().getRib());
         return depositDto;
 
     }

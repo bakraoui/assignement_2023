@@ -1,6 +1,6 @@
-package ma.octo.assignement.security.repository;
+package ma.octo.assignement.repository;
 
-import ma.octo.assignement.security.entity.AppRole;
+import ma.octo.assignement.domain.AppRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

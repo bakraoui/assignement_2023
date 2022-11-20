@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static ma.octo.assignement.domain.util.RoleType.*;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -30,18 +31,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        // http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable();
         http.csrf().disable();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/h2-console/**", "/login").permitAll();
+
+        http.authorizeRequests().antMatchers("/api")
+                .hasAnyAuthority(ADMIN.getRole());
 
         http.authorizeRequests()
                 .anyRequest()
                 .authenticated();
 
         http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean()));
-
         http.addFilterBefore(new JwtAuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

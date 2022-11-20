@@ -4,7 +4,7 @@ import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.audit.Audit;
 import ma.octo.assignement.domain.audit.AuditTransfer;
 import ma.octo.assignement.domain.operation.Transfer;
-import ma.octo.assignement.dto.TransferDto;
+import ma.octo.assignement.dto.operationDto.TransferDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;
 import ma.octo.assignement.exceptions.TransactionException;
@@ -14,13 +14,12 @@ import ma.octo.assignement.repository.CompteRepository;
 import ma.octo.assignement.repository.TransferRepository;
 import ma.octo.assignement.service.interfaces.AuditService;
 import ma.octo.assignement.service.interfaces.TransferService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static ma.octo.assignement.service.validators.OperationValidator.*;
 import static ma.octo.assignement.service.validators.OperationValidator.ValidationResult.SUCCES;
@@ -44,14 +43,21 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public Transfer getTransfer(Long id) {
-        return transferRepository.findById(id)
-                .orElseThrow(TransferNonExistantException::new);
+    public TransferDto getTransfer(Long id) {
+        Optional<Transfer> optionalTransferDto = transferRepository.findById(id);
+
+        if (!optionalTransferDto.isPresent())
+            throw new TransferNonExistantException("ce transfert non existant");
+
+        return TransferMapper.map(optionalTransferDto.get());
     }
 
     @Override
-    public List<Transfer> allTransfer() {
-        return transferRepository.findAll();
+    public List<TransferDto> allTransfer() {
+        return transferRepository.findAll()
+                .stream()
+                .map(TransferMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -68,28 +74,26 @@ public class TransferServiceImpl implements TransferService {
         if (!result.equals(SUCCES))
             throw new  TransactionException(result.getType());
 
-
-
         Compte emetteur = compteRepository.findByNrCompte(transferDto.getNrCompteEmetteur());
         Compte beneficiaire = compteRepository.findByNrCompte(transferDto.getNrCompteBeneficiaire());
 
         if (emetteur == null || beneficiaire == null) {
-            throw new CompteNonExistantException("Compte Non existant, verifiez bien les deux numeros de comptes");
+            throw new CompteNonExistantException(
+                    "Compte Non existant, verifiez bien les deux numeros de comptes");
         }
 
-         result = isMontantSuffisant(emetteur.getSolde()).apply(transferDto);
+        result = isMontantSuffisant(emetteur.getSolde()).apply(transferDto);
 
         if (!result.equals(SUCCES))
             throw new  TransactionException(result.getType());
 
 
+        // update sold emetteur
         emetteur.setSolde(emetteur.getSolde().subtract(transferDto.getMontant()));
         compteRepository.save(emetteur);
 
         // update sold of the receiver
-        beneficiaire.setSolde(
-                new BigDecimal(beneficiaire.getSolde().intValue()
-                                + transferDto.getMontant().intValue()));
+        beneficiaire.setSolde(beneficiaire.getSolde().add(transferDto.getMontant()));
         compteRepository.save(beneficiaire);
 
         // save the transfer details

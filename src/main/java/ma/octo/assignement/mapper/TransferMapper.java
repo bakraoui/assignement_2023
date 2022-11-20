@@ -2,7 +2,7 @@ package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.operation.Transfer;
-import ma.octo.assignement.dto.TransferDto;
+import ma.octo.assignement.dto.operationDto.TransferDto;
 
 public class TransferMapper {
 
@@ -16,7 +16,6 @@ public class TransferMapper {
         transferDto.setMotif(transfer.getMotif());
 
         return transferDto;
-
     }
 
     public static Transfer toTransfer(TransferDto transferDto, Compte emetteur, Compte beneficiaiare) {

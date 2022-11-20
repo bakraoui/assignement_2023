@@ -1,28 +1,23 @@
 package ma.octo.assignement.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
 @Table(name = "UTILISATEUR")
 public class Utilisateur  {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
-
-  @Column(length = 10, nullable = false, unique = true)
-  private String username;
 
   @Column(length = 10, nullable = false)
   private String gender;
@@ -36,4 +31,17 @@ public class Utilisateur  {
   @Temporal(TemporalType.DATE)
   private Date birthdate;
 
+  @Column(length = 10, nullable = false, unique = true)
+  private String username;
+
+  private String password;
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  private Collection<AppRole> roles;
+
+  public Utilisateur(Long id, String username, String password) {
+    this.id = id;
+    this.username = username;
+    this.password = password;
+  }
 }

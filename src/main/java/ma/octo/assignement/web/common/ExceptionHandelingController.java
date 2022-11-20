@@ -42,7 +42,7 @@ public class ExceptionHandelingController {
 
     @ExceptionHandler(UtilisateurExistantException.class)
     public ResponseEntity<String> handleUtilisateurExistantException(Exception ex, WebRequest r){
-        return new ResponseEntity<>(ex.getMessage(), null, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), null, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(UtilisateurNonExistantException.class)

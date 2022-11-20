@@ -1,31 +1,34 @@
 package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.UtilisateurDto;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
 
 public class UtilisateurMapper {
 
-    public static UtilisateurDto map(Utilisateur utilisateur) {
-        UtilisateurDto utilisateurDto = new UtilisateurDto();
+    public static UtilisateurResponseDto map(Utilisateur utilisateur) {
+        UtilisateurResponseDto utilisateurResponseDto = new UtilisateurResponseDto();
 
-        utilisateurDto.setFirstname(utilisateur.getFirstname());
-        utilisateurDto.setLastname(utilisateur.getLastname());
-        utilisateurDto.setGender(utilisateur.getGender());
-        utilisateurDto.setBirthdate(utilisateur.getBirthdate());
-        utilisateurDto.setUsername(utilisateur.getUsername());
+        utilisateurResponseDto.setFirstname(utilisateur.getFirstname());
+        utilisateurResponseDto.setLastname(utilisateur.getLastname());
+        utilisateurResponseDto.setGender(utilisateur.getGender());
+        utilisateurResponseDto.setBirthdate(utilisateur.getBirthdate());
+        utilisateurResponseDto.setUsername(utilisateur.getUsername());
 
-
-        return utilisateurDto;
+        return utilisateurResponseDto;
     }
 
-    public static Utilisateur toUtilisateur(UtilisateurDto utilisateurDto) {
+    public static Utilisateur toUtilisateur(UtilisateurRequestDto utilisateurRequestDto) {
         Utilisateur utilisateur = new Utilisateur();
 
-        utilisateur.setFirstname(utilisateurDto.getFirstname());
-        utilisateur.setLastname(utilisateurDto.getLastname());
-        utilisateur.setGender(utilisateurDto.getGender());
-        utilisateur.setUsername(utilisateurDto.getUsername());
-        utilisateur.setBirthdate(utilisateurDto.getBirthdate());
+        utilisateur.setFirstname(utilisateurRequestDto.getFirstname());
+        utilisateur.setLastname(utilisateurRequestDto.getLastname());
+        utilisateur.setGender(utilisateurRequestDto.getGender());
+        utilisateur.setBirthdate(utilisateurRequestDto.getBirthdate());
+        utilisateur.setUsername(utilisateurRequestDto.getUsername());
+        utilisateur.setPassword(utilisateurRequestDto.getPassword());
+
+
 
         return utilisateur;
     }

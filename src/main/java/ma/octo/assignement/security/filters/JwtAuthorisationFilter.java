@@ -21,7 +21,8 @@ import java.util.stream.Collectors;
 public class JwtAuthorisationFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
         // Bearer jwt
@@ -42,6 +43,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
 
                 Collection<SimpleGrantedAuthority> authorities = Arrays.stream(roles)
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
                 // authenticate
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(username, null, authorities);

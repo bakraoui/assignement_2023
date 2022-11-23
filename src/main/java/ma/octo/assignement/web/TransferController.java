@@ -1,6 +1,5 @@
 package ma.octo.assignement.web;
 
-import ma.octo.assignement.domain.operation.Transfer;
 import ma.octo.assignement.dto.operationDto.TransferDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;

@@ -18,7 +18,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"ma.octo.assignement.repository", "ma.octo.assignement.security.repository"})
+        basePackages = {"ma.octo.assignement.repository"})
 
 public class JpaConfig {
 
@@ -30,8 +30,7 @@ public class JpaConfig {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan(
-                "ma.octo.assignement.domain",
-                "ma.octo.assignement.security.entity");
+                "ma.octo.assignement.domain");
         em.setPersistenceUnitName("entityManager");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

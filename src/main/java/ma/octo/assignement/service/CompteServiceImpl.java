@@ -25,7 +25,6 @@ import static ma.octo.assignement.service.validators.CompteValidator.ValidationR
 public class CompteServiceImpl implements CompteService {
 
     private final CompteRepository compteRepository;
-    
     private final UtilisateurRepository utilisateurRepository;
 
     public CompteServiceImpl(CompteRepository compteRepository,
@@ -35,8 +34,18 @@ public class CompteServiceImpl implements CompteService {
     }
 
     @Override
-    public CompteResponseDto save(CompteRequestDto compteRequestDto) {
+    public CompteResponseDto saveCompte(CompteRequestDto compteRequestDto) {
 
+        // input validation
+        ValidationResult result = isNbCompteValid()
+                .and(isRibValid())
+                .and(isSoldValid())
+                .apply(compteRequestDto);
+
+        if (!result.equals(SUCCES))
+            throw new CompteValidationException(result.getMessage());
+
+        // check utilisateur
         Utilisateur utilisateur = utilisateurRepository
                 .findByUsername(compteRequestDto.getUtilisateurUsername());
 
@@ -46,34 +55,30 @@ public class CompteServiceImpl implements CompteService {
                             + compteRequestDto.getUtilisateurUsername() );
         }
 
-        ValidationResult result = isNbCompteValid()
-                .and(isRibValid())
-                .and(isSoldValid())
-                .apply(compteRequestDto);
-
-        if (!result.equals(SUCCES))
-            throw new CompteValidationException(result.getMessage());
-
-        Compte compteExistant = compteRepository.findByNrCompte(compteRequestDto.getNrCompte());
+        // check compte
+        Compte compteExistant = compteRepository.findByNumeroCompte(compteRequestDto.getNumeroCompte());
 
         if (compteExistant != null)
             throw new CompteExistantException("Ce numero de compte deja prie.");
 
+        // save compte
         Compte compte = compteRepository.save(
-                CompteMapper.toCompte(compteRequestDto, utilisateur));
+                CompteMapper.mapToCompte(compteRequestDto, utilisateur));
 
-        return CompteMapper.map(compte);
+        return CompteMapper.mapToCompteResponseDto(compte);
     }
 
     @Override
     public CompteResponseDto getCompte(String nrCompte) {
-        return CompteMapper.map(compteRepository.findByNrCompte(nrCompte));
+        // check if compte exist first...
+        return CompteMapper.mapToCompteResponseDto(compteRepository.findByNumeroCompte(nrCompte));
     }
 
     @Override
     public List<CompteResponseDto> allComptes() {
         return compteRepository.findAll()
-                .stream().map(CompteMapper::map)
+                .stream().map(CompteMapper::mapToCompteResponseDto)
+                // map(compte -> CompteMapper.mapToCompteResponseDto(compte))
                 .collect(Collectors.toList());
     }
 }

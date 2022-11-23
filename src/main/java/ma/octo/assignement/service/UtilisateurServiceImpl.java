@@ -34,7 +34,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Override
     public List<UtilisateurResponseDto> allUtilisateurs() {
         return utilisateurRepository.findAll()
-                .stream().map(UtilisateurMapper::map).collect(Collectors.toList());
+                .stream().map(UtilisateurMapper::mapToUtilisateurResponseDto).collect(Collectors.toList());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
             throw new UtilisateurExistantException("Ce nom d'utilisateur deja prie");
         }
 
-        Utilisateur utilisateur = UtilisateurMapper.toUtilisateur(utilisateurRequestDto);
+        Utilisateur utilisateur = UtilisateurMapper.mapToUtilisateur(utilisateurRequestDto);
 
         // encoder le password
         String encodedPassword = passwordEncoder.encode(utilisateurRequestDto.getPassword());
@@ -53,14 +53,14 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         utilisateur.setPassword(encodedPassword);
 
         Utilisateur saveUtilisateur = utilisateurRepository.save(utilisateur);
-        return UtilisateurMapper.map(saveUtilisateur);
+        return UtilisateurMapper.mapToUtilisateurResponseDto(saveUtilisateur);
 
     }
 
 
     @Override
     public UtilisateurResponseDto loadUserByUsername(String username) {
-        return UtilisateurMapper.map(utilisateurRepository.findByUsername(username));
+        return UtilisateurMapper.mapToUtilisateurResponseDto(utilisateurRepository.findByUsername(username));
     }
 
     @Override

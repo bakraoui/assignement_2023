@@ -38,9 +38,9 @@ public class DepositServiceImpl implements DepositService {
 
 
     @Override
-    public List<DepositDto> loadAll() {
+    public List<DepositDto> loadAllDeposits() {
         return depositRepository.findAll()
-                .stream().map(DepositMapper::map)
+                .stream().map(DepositMapper::mapToDepositDto)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +67,7 @@ public class DepositServiceImpl implements DepositService {
         }
 
         // create new deposit
-        MoneyDeposit moneyDeposit = DepositMapper.toMoneyDeposit(depositDto, beneficiaire);
+        MoneyDeposit moneyDeposit = DepositMapper.mapToMoneyDeposit(depositDto, beneficiaire);
         depositRepository.save(moneyDeposit);
 
         // update receiver's sold

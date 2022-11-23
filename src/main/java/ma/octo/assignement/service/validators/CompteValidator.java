@@ -25,7 +25,7 @@ public interface CompteValidator extends Function<CompteRequestDto, ValidationRe
 
 
     static CompteValidator isNbCompteValid(){
-        return compteDto -> compteDto.getNrCompte()==null || compteDto.getNrCompte().length() == 0 ?
+        return compteDto -> compteDto.getNumeroCompte()==null || compteDto.getNumeroCompte().length() == 0 ?
                 NB_COMPTE_INVALIDE : SUCCES;
     }
 

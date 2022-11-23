@@ -24,7 +24,7 @@ public class NiceBankApplication {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
+	/*@Bean
 	CommandLineRunner start(UtilisateurService utilisateurService) {
 		return args -> {
 
@@ -56,5 +56,5 @@ public class NiceBankApplication {
 		};
 	}
 
-
+*/
 }

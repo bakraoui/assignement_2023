@@ -29,7 +29,7 @@ public class Utilisateur  {
   private String firstname;
 
   @Temporal(TemporalType.DATE)
-  private Date birthdate;
+  private Date birthDate;
 
   @Column(length = 10, nullable = false, unique = true)
   private String username;
@@ -39,9 +39,5 @@ public class Utilisateur  {
   @ManyToMany(fetch = FetchType.EAGER)
   private Collection<AppRole> roles;
 
-  public Utilisateur(Long id, String username, String password) {
-    this.id = id;
-    this.username = username;
-    this.password = password;
-  }
+
 }

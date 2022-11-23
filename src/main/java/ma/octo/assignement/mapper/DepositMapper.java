@@ -8,10 +8,10 @@ public class DepositMapper {
 
     private static DepositDto depositDto;
 
-    public static DepositDto map(MoneyDeposit moneyDeposit) {
+    public static DepositDto mapToDepositDto(MoneyDeposit moneyDeposit) {
 
         depositDto = new DepositDto();
-        depositDto.setNrCompteBeneficiaire(moneyDeposit.getCompteBeneficiaire().getNrCompte());
+        depositDto.setNrCompteBeneficiaire(moneyDeposit.getCompteBeneficiaire().getNumeroCompte());
         depositDto.setDate(moneyDeposit.getDateExecution());
         depositDto.setMotif(moneyDeposit.getMotif());
         depositDto.setMontant(moneyDeposit.getMontant());
@@ -20,7 +20,7 @@ public class DepositMapper {
 
     }
 
-    public static MoneyDeposit toMoneyDeposit(DepositDto depositDto, Compte beneficiaiare) {
+    public static MoneyDeposit mapToMoneyDeposit(DepositDto depositDto, Compte beneficiaiare) {
         MoneyDeposit moneyDeposit = new MoneyDeposit();
 
         moneyDeposit.setMotif(depositDto.getMotif());

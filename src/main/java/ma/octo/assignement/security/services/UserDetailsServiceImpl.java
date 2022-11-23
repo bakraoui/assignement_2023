@@ -2,7 +2,6 @@ package ma.octo.assignement.security.services;
 
 import ma.octo.assignement.domain.Utilisateur;
 import ma.octo.assignement.repository.UtilisateurRepository;
-import ma.octo.assignement.service.interfaces.UtilisateurService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

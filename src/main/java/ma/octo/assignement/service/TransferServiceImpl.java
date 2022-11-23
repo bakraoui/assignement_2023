@@ -49,14 +49,14 @@ public class TransferServiceImpl implements TransferService {
         if (!optionalTransferDto.isPresent())
             throw new TransferNonExistantException("ce transfert non existant");
 
-        return TransferMapper.map(optionalTransferDto.get());
+        return TransferMapper.mapToTransfertDto(optionalTransferDto.get());
     }
 
     @Override
     public List<TransferDto> allTransfer() {
         return transferRepository.findAll()
                 .stream()
-                .map(TransferMapper::map)
+                .map(TransferMapper::mapToTransfertDto)
                 .collect(Collectors.toList());
     }
 
@@ -74,8 +74,8 @@ public class TransferServiceImpl implements TransferService {
         if (!result.equals(SUCCES))
             throw new  TransactionException(result.getType());
 
-        Compte emetteur = compteRepository.findByNrCompte(transferDto.getNrCompteEmetteur());
-        Compte beneficiaire = compteRepository.findByNrCompte(transferDto.getNrCompteBeneficiaire());
+        Compte emetteur = compteRepository.findByNumeroCompte(transferDto.getNrCompteEmetteur());
+        Compte beneficiaire = compteRepository.findByNumeroCompte(transferDto.getNrCompteBeneficiaire());
 
         if (emetteur == null || beneficiaire == null) {
             throw new CompteNonExistantException(
@@ -97,7 +97,7 @@ public class TransferServiceImpl implements TransferService {
         compteRepository.save(beneficiaire);
 
         // save the transfer details
-        Transfer transfer = TransferMapper.toTransfer(transferDto, emetteur, beneficiaire);
+        Transfer transfer = TransferMapper.mapToTransfer(transferDto, emetteur, beneficiaire);
         transferRepository.save(transfer);
 
         // save an audit transfer

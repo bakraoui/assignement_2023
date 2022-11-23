@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CompteService {
 
-    CompteResponseDto save(CompteRequestDto compteRequestDto);
+    CompteResponseDto saveCompte(CompteRequestDto compteRequestDto);
     CompteResponseDto getCompte(String nrCompte);
     List<CompteResponseDto> allComptes();
 }

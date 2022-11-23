@@ -8,10 +8,10 @@ import ma.octo.assignement.dto.compteDto.CompteResponseDto;
 public class CompteMapper {
 
 
-    public static CompteResponseDto map(Compte compte){
+    public static CompteResponseDto mapToCompteResponseDto(Compte compte){
         CompteResponseDto compteResponseDto = new CompteResponseDto();
 
-        compteResponseDto.setNrCompte(compte.getNrCompte());
+        compteResponseDto.setNrCompte(compte.getNumeroCompte());
         compteResponseDto.setRib(compte.getRib());
         compteResponseDto.setSolde(compte.getSolde());
         compteResponseDto.setUtilisateurUsername(compte.getUtilisateur().getUsername());
@@ -19,10 +19,10 @@ public class CompteMapper {
         return compteResponseDto;
     }
 
-    public static Compte toCompte(CompteRequestDto compteRequestDto, Utilisateur utilisateur){
+    public static Compte mapToCompte(CompteRequestDto compteRequestDto, Utilisateur utilisateur){
         Compte compte = new Compte();
 
-        compte.setNrCompte(compteRequestDto.getNrCompte());
+        compte.setNumeroCompte(compteRequestDto.getNumeroCompte());
         compte.setRib(compteRequestDto.getRib());
         compte.setSolde(compteRequestDto.getSolde());
         compte.setUtilisateur(utilisateur);

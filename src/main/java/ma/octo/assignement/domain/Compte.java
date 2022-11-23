@@ -15,7 +15,7 @@ public class Compte {
   private Long id;
 
   @Column(length = 16, unique = true)
-  private String nrCompte;
+  private String numeroCompte;
 
   @Column(unique = true)
   private String rib;

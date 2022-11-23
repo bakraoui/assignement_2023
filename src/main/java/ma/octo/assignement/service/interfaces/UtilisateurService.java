@@ -1,7 +1,6 @@
 package ma.octo.assignement.service.interfaces;
 
 import ma.octo.assignement.domain.AppRole;
-import ma.octo.assignement.domain.Utilisateur;
 import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
 import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
 

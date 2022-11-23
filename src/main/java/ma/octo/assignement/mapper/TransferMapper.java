@@ -8,17 +8,17 @@ public class TransferMapper {
 
     private static TransferDto transferDto;
 
-    public static TransferDto map(Transfer transfer) {
+    public static TransferDto mapToTransfertDto(Transfer transfer) {
 
         transferDto = new TransferDto();
-        transferDto.setNrCompteEmetteur(transfer.getCompteEmetteur().getNrCompte());
+        transferDto.setNrCompteEmetteur(transfer.getCompteEmetteur().getNumeroCompte());
         transferDto.setDate(transfer.getDateExecution());
         transferDto.setMotif(transfer.getMotif());
 
         return transferDto;
     }
 
-    public static Transfer toTransfer(TransferDto transferDto, Compte emetteur, Compte beneficiaiare) {
+    public static Transfer mapToTransfer(TransferDto transferDto, Compte emetteur, Compte beneficiaiare) {
         Transfer transfer = new Transfer();
 
         transfer.setMotif(transferDto.getMotif());

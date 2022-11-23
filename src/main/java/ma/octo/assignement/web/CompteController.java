@@ -3,6 +3,7 @@ package ma.octo.assignement.web;
 import ma.octo.assignement.dto.compteDto.CompteRequestDto;
 import ma.octo.assignement.dto.compteDto.CompteResponseDto;
 import ma.octo.assignement.service.interfaces.CompteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/comptes")
 public class CompteController {
+
 
     private final CompteService compteService;
 
@@ -24,8 +26,9 @@ public class CompteController {
 
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) // 201
     public CompteResponseDto save(@RequestBody CompteRequestDto compteRequestDto){
-        return compteService.save(compteRequestDto);
+        return compteService.saveCompte(compteRequestDto);
     }
 
 }

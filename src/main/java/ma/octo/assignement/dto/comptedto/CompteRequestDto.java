@@ -1,6 +1,8 @@
-package ma.octo.assignement.dto.compteDto;
+package ma.octo.assignement.dto.comptedto;
+
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,9 +12,10 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompteResponseDto implements Serializable {
+@Builder
+public class CompteRequestDto implements Serializable {
 
-    private String nrCompte;
+    private String numeroCompte;
     private String rib;
     private BigDecimal solde;
     private String utilisateurUsername;

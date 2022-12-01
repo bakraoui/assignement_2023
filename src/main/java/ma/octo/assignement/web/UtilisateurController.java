@@ -1,7 +1,7 @@
 package ma.octo.assignement.web;
 
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurResponseDto;
 import ma.octo.assignement.service.interfaces.UtilisateurService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

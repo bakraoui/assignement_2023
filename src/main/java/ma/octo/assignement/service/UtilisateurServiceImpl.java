@@ -3,8 +3,8 @@ package ma.octo.assignement.service;
 
 import ma.octo.assignement.domain.AppRole;
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurResponseDto;
 import ma.octo.assignement.exceptions.UtilisateurExistantException;
 import ma.octo.assignement.mapper.UtilisateurMapper;
 import ma.octo.assignement.repository.AppRoleRepository;
@@ -56,7 +56,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         return UtilisateurMapper.mapToUtilisateurResponseDto(saveUtilisateur);
 
     }
-
 
     @Override
     public UtilisateurResponseDto loadUserByUsername(String username) {

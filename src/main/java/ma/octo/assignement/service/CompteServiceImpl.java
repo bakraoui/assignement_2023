@@ -2,23 +2,25 @@ package ma.octo.assignement.service;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.compteDto.CompteRequestDto;
-import ma.octo.assignement.dto.compteDto.CompteResponseDto;
+import ma.octo.assignement.dto.comptedto.CompteRequestDto;
+import ma.octo.assignement.dto.comptedto.CompteResponseDto;
 import ma.octo.assignement.exceptions.CompteExistantException;
+import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.CompteValidationException;
 import ma.octo.assignement.exceptions.UtilisateurNonExistantException;
 import ma.octo.assignement.mapper.CompteMapper;
 import ma.octo.assignement.repository.CompteRepository;
 import ma.octo.assignement.repository.UtilisateurRepository;
 import ma.octo.assignement.service.interfaces.CompteService;
+import ma.octo.assignement.service.utils.CompteValidationResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ma.octo.assignement.service.utils.CompteValidationResult.*;
 import static ma.octo.assignement.service.validators.CompteValidator.*;
-import static ma.octo.assignement.service.validators.CompteValidator.ValidationResult.SUCCES;
 
 @Service
 @Transactional
@@ -37,7 +39,7 @@ public class CompteServiceImpl implements CompteService {
     public CompteResponseDto saveCompte(CompteRequestDto compteRequestDto) {
 
         // input validation
-        ValidationResult result = isNbCompteValid()
+        CompteValidationResult result = isNumeroCompteValid()
                 .and(isRibValid())
                 .and(isSoldValid())
                 .apply(compteRequestDto);
@@ -56,22 +58,28 @@ public class CompteServiceImpl implements CompteService {
         }
 
         // check compte
-        Compte compteExistant = compteRepository.findByNumeroCompte(compteRequestDto.getNumeroCompte());
+        Compte compteExistant = compteRepository
+                .findByNumeroCompte(compteRequestDto.getNumeroCompte());
 
         if (compteExistant != null)
             throw new CompteExistantException("Ce numero de compte deja prie.");
 
         // save compte
-        Compte compte = compteRepository.save(
-                CompteMapper.mapToCompte(compteRequestDto, utilisateur));
+        Compte compte = compteRepository
+                .save(CompteMapper.mapToCompte(compteRequestDto, utilisateur));
 
         return CompteMapper.mapToCompteResponseDto(compte);
     }
 
     @Override
-    public CompteResponseDto getCompte(String nrCompte) {
+    public CompteResponseDto getCompteByNrCompte(String nrCompte) {
         // check if compte exist first...
-        return CompteMapper.mapToCompteResponseDto(compteRepository.findByNumeroCompte(nrCompte));
+
+        Compte compte = compteRepository.findByNumeroCompte(nrCompte);
+        if (compte == null) {
+            throw new CompteNonExistantException("aucun compte n'est trouvee");
+        }
+        return CompteMapper.mapToCompteResponseDto(compte);
     }
 
     @Override

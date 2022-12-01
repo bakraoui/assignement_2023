@@ -2,8 +2,8 @@ package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.compteDto.CompteRequestDto;
-import ma.octo.assignement.dto.compteDto.CompteResponseDto;
+import ma.octo.assignement.dto.comptedto.CompteRequestDto;
+import ma.octo.assignement.dto.comptedto.CompteResponseDto;
 
 public class CompteMapper {
 

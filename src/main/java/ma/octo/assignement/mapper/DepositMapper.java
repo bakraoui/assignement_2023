@@ -2,7 +2,7 @@ package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.operation.MoneyDeposit;
-import ma.octo.assignement.dto.operationDto.DepositDto;
+import ma.octo.assignement.dto.operationdto.DepositDto;
 
 public class DepositMapper {
 

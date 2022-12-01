@@ -1,5 +1,6 @@
 package ma.octo.assignement.security;
 
+import ma.octo.assignement.domain.util.RoleType;
 import ma.octo.assignement.security.filters.JwtAuthenticationFilter;
 import ma.octo.assignement.security.filters.JwtAuthorisationFilter;
 import ma.octo.assignement.security.services.UserDetailsServiceImpl;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final UserDetailsServiceImpl userDetailsService;
 
     public SpringSecurityConfig(UserDetailsServiceImpl userDetailsService) {
@@ -30,6 +32,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+
         http.headers().frameOptions().disable();
         http.csrf().disable();
 
@@ -37,7 +40,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/h2-console/**", "/login").permitAll();
 
         http.authorizeRequests().antMatchers("/api")
-                .hasAnyAuthority("ADMIN");
+                .hasAnyAuthority(RoleType.ADMIN.getRole());
 
         http.authorizeRequests()
                 .anyRequest()

@@ -1,8 +1,8 @@
 package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Utilisateur;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurResponseDto;
 
 public class UtilisateurMapper {
 

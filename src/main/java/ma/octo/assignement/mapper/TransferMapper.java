@@ -2,7 +2,7 @@ package ma.octo.assignement.mapper;
 
 import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.operation.Transfer;
-import ma.octo.assignement.dto.operationDto.TransferDto;
+import ma.octo.assignement.dto.operationdto.TransferDto;
 
 public class TransferMapper {
 

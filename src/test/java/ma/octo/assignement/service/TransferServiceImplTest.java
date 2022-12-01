@@ -1,20 +1,20 @@
 package ma.octo.assignement.service;
 
-import ma.octo.assignement.dto.compteDto.CompteRequestDto;
-import ma.octo.assignement.dto.compteDto.CompteResponseDto;
-import ma.octo.assignement.dto.operationDto.TransferDto;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.comptedto.CompteRequestDto;
+import ma.octo.assignement.dto.comptedto.CompteResponseDto;
+import ma.octo.assignement.dto.operationdto.TransferDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurRequestDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;
 import ma.octo.assignement.exceptions.TransactionException;
 import ma.octo.assignement.service.interfaces.CompteService;
 import ma.octo.assignement.service.interfaces.TransferService;
 import ma.octo.assignement.service.interfaces.UtilisateurService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -22,10 +22,12 @@ import java.math.RoundingMode;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(SpringExtension.class)
+
 @SpringBootTest
 @Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TransferServiceImplTest {
 
   // les soldes initiales
@@ -51,44 +53,85 @@ public class TransferServiceImplTest {
     this.transferService = transferService;
   }
 
-  @Test
-  public void testSavingValidTransfer() throws TransactionException, CompteNonExistantException, SoldeDisponibleInsuffisantException {
-
+  @BeforeAll
+  public void setUp() {
     // Creer un Compte Beneficiaire avec utilisateur beneficiaire
     UtilisateurRequestDto utilisateurBeneficiaire = UtilisateurRequestDto.builder()
-            .username("userB")
-            .password("bbbb")
-            .firstname("firstB")
-            .lastname("lastB")
+            .username("username3")
+            .password("1234")
+            .firstname("firstname3")
+            .lastname("lastname3")
             .gender("Male")
             .build();
     utilisateurService.save(utilisateurBeneficiaire);
 
     CompteRequestDto compteRequestBeneficiaire = CompteRequestDto.builder()
             .numeroCompte("010000B000001000")
-            .rib("RIBB")
+            .rib("RIB3")
             .solde(BigDecimal.valueOf(BENEFICIAIRE_SOLD).setScale(2, RoundingMode.FLOOR))
-            .utilisateurUsername("userB")
+            .utilisateurUsername("username3")
             .build();
     compteService.saveCompte(compteRequestBeneficiaire);
 
     // Creer un Compte Emetteur avec utilisateur emetteur
     UtilisateurRequestDto utilisateurEmetteur = UtilisateurRequestDto.builder()
-            .username("userE")
-            .password("eeee")
-            .firstname("firstE")
-            .lastname("lastE")
+            .username("username4")
+            .password("1234")
+            .firstname("firstname4")
+            .lastname("lastname4")
             .gender("Female")
             .build();
-     utilisateurService.save(utilisateurEmetteur);
+    utilisateurService.save(utilisateurEmetteur);
 
     CompteRequestDto compteRequestEmetteur = CompteRequestDto.builder()
             .numeroCompte("010000E025001000")
-            .rib("RIBE")
+            .rib("RIB4")
             .solde(BigDecimal.valueOf(EMETTEUR_SOLD).setScale(2, RoundingMode.FLOOR))
-            .utilisateurUsername("userE")
+            .utilisateurUsername("username4")
             .build();
     compteService.saveCompte(compteRequestEmetteur);
+
+  }
+
+  @Test
+  public void createTransfer_shouldThrow_TransactionException() {
+
+    // creer un transfer
+    TransferDto transferDto = new TransferDto();
+    // transferDto.setMotif("TRANSFERT D'ARGENT");
+    transferDto.setMontant(BigDecimal.valueOf(MONTANT_TRANSFER));
+    transferDto.setDate(new Date());
+    transferDto.setNrCompteEmetteur("010000E025001000");
+    transferDto.setNrCompteBeneficiaire("010000B000001000");
+
+    assertThrows(TransactionException.class, ()->{
+      transferService.createTransaction(transferDto);
+    });
+
+  }
+
+  @Test
+  public void createTransfer_shouldThrow_CompteNonExistantException() {
+
+    // creer un transfer
+    TransferDto transferDto = new TransferDto();
+    transferDto.setMotif("TRANSFERT D'ARGENT");
+    transferDto.setMontant(BigDecimal.valueOf(MONTANT_TRANSFER));
+    transferDto.setDate(new Date());
+    transferDto.setNrCompteEmetteur("010000E0200"); // numero de compte n'existe pas
+    transferDto.setNrCompteBeneficiaire("010000B000001000");
+
+    assertThrows(CompteNonExistantException.class, ()->{
+      transferService.createTransaction(transferDto);
+    });
+
+  }
+
+
+
+
+  @Test
+  public void createTransfer_successfully() throws TransactionException, CompteNonExistantException, SoldeDisponibleInsuffisantException {
 
     // creer un transfer
     TransferDto transferDto = new TransferDto();
@@ -99,8 +142,8 @@ public class TransferServiceImplTest {
     transferDto.setNrCompteBeneficiaire("010000B000001000");
     transferService.createTransaction(transferDto);
 
-    CompteResponseDto compteEmetteur = compteService.getCompte("010000E025001000");
-    CompteResponseDto compteBeneficiaire = compteService.getCompte("010000B000001000");
+    CompteResponseDto compteEmetteur = compteService.getCompteByNrCompte("010000E025001000");
+    CompteResponseDto compteBeneficiaire = compteService.getCompteByNrCompte("010000B000001000");
 
 
     // soldEmetteur = oldSoldEmetteur - transferredMontant
@@ -113,7 +156,6 @@ public class TransferServiceImplTest {
 
     assertThat(compteBeneficiaire.getSolde())
             .isEqualByComparingTo(BigDecimal.valueOf(EXPECTED_BENEFICIAIRE_SOLD));
-
 
   }
 

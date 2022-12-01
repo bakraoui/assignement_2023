@@ -1,31 +1,15 @@
 package ma.octo.assignement.service.validators;
 
-import ma.octo.assignement.dto.compteDto.CompteRequestDto;
+import ma.octo.assignement.dto.comptedto.CompteRequestDto;
+import ma.octo.assignement.service.utils.CompteValidationResult;
+import static ma.octo.assignement.service.utils.CompteValidationResult.*;
 
 import java.util.function.Function;
-import static ma.octo.assignement.service.validators.CompteValidator.*;
-import static ma.octo.assignement.service.validators.CompteValidator.ValidationResult.*;
-public interface CompteValidator extends Function<CompteRequestDto, ValidationResult> {
+public interface CompteValidator extends Function<CompteRequestDto, CompteValidationResult> {
 
-    enum ValidationResult {
-        NB_COMPTE_INVALIDE("Numero de compte est invalide"),
-        RIB_INVALIDE("numero RIB est invalide"),
-        SOLDE_INVALIDE("entrer un solde valide"),
-        SUCCES("Tous les champs sont valides");
-
-        private String message;
-        ValidationResult(String message){
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
-
-
-    static CompteValidator isNbCompteValid(){
-        return compteDto -> compteDto.getNumeroCompte()==null || compteDto.getNumeroCompte().length() == 0 ?
+    static CompteValidator isNumeroCompteValid(){
+        return compteDto -> compteDto.getNumeroCompte() == null
+                || compteDto.getNumeroCompte().length() == 0 ?
                 NB_COMPTE_INVALIDE : SUCCES;
     }
 
@@ -40,8 +24,7 @@ public interface CompteValidator extends Function<CompteRequestDto, ValidationRe
 
     default CompteValidator and (CompteValidator other) {
         return compteDto -> {
-            ValidationResult result = this.apply(compteDto);
-
+            CompteValidationResult result = this.apply(compteDto);
             return result.equals(SUCCES) ? other.apply(compteDto) : result;
         };
     }

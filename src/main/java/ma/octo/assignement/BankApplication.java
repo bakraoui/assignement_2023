@@ -1,7 +1,8 @@
 package ma.octo.assignement;
 
 import ma.octo.assignement.domain.AppRole;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
+import ma.octo.assignement.domain.util.RoleType;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurRequestDto;
 import ma.octo.assignement.service.interfaces.UtilisateurService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,13 +11,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
 @SpringBootApplication
-public class NiceBankApplication {
+public class BankApplication {
 
 
 	public static void main(String[] args) {
-		SpringApplication.run(NiceBankApplication.class, args);
+		SpringApplication.run(BankApplication.class, args);
 	}
 
 	@Bean
@@ -24,12 +24,12 @@ public class NiceBankApplication {
 		return new BCryptPasswordEncoder();
 	}
 
-	/*@Bean
+	@Bean
 	CommandLineRunner start(UtilisateurService utilisateurService) {
 		return args -> {
 
-			utilisateurService.saveRole(new AppRole(null, "ADMIN"));
-			utilisateurService.saveRole(new AppRole(null, "USER"));
+			utilisateurService.saveRole(new AppRole(null, RoleType.ADMIN.getRole()));
+			utilisateurService.saveRole(new AppRole(null, RoleType.USER.getRole()));
 
 			UtilisateurRequestDto admin = UtilisateurRequestDto.builder()
 					.firstname("firstname1")
@@ -49,12 +49,11 @@ public class NiceBankApplication {
 					.build();
 			utilisateurService.save(utilisateur);
 
-			utilisateurService.addRoleToUser("USER","admin" );
-			utilisateurService.addRoleToUser("ADMIN","admin" );
+			utilisateurService.addRoleToUser(RoleType.ADMIN.getRole(), "admin" );
+			utilisateurService.addRoleToUser(RoleType.USER.getRole(), "admin" );
 
-			utilisateurService.addRoleToUser("USER","user" );
+			utilisateurService.addRoleToUser(RoleType.USER.getRole(), "user" );
 		};
 	}
 
-*/
 }

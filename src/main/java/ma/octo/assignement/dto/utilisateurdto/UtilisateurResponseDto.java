@@ -1,4 +1,4 @@
-package ma.octo.assignement.dto.utilisateurDto;
+package ma.octo.assignement.dto.utilisateurdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,13 +1,13 @@
 package ma.octo.assignement.service.interfaces;
 
-import ma.octo.assignement.dto.compteDto.CompteRequestDto;
-import ma.octo.assignement.dto.compteDto.CompteResponseDto;
+import ma.octo.assignement.dto.comptedto.CompteRequestDto;
+import ma.octo.assignement.dto.comptedto.CompteResponseDto;
 
 import java.util.List;
 
 public interface CompteService {
 
     CompteResponseDto saveCompte(CompteRequestDto compteRequestDto);
-    CompteResponseDto getCompte(String nrCompte);
+    CompteResponseDto getCompteByNrCompte(String nrCompte);
     List<CompteResponseDto> allComptes();
 }

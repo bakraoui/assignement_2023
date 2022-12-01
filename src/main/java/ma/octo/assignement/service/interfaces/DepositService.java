@@ -1,6 +1,6 @@
 package ma.octo.assignement.service.interfaces;
 
-import ma.octo.assignement.dto.operationDto.DepositDto;
+import ma.octo.assignement.dto.operationdto.DepositDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.TransactionException;
 

@@ -3,7 +3,6 @@ package ma.octo.assignement.security.filters;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ma.octo.assignement.security.utils.Constant;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,10 +10,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.DelegatingFilterProxy;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,6 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static ma.octo.assignement.security.utils.Constant.*;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -62,38 +61,39 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = (User) authResult.getPrincipal();
 
         // generate JWT
-        Algorithm algorithm = Algorithm.HMAC256(Constant.KEY); // algo for signature, take a secret key
+        Algorithm algorithm = Algorithm.HMAC256(KEY); // algo for signature, take a secret key
 
-        String jwt_access_token = JWT.create()
+        String jwtAccessToken = JWT.create()
                 .withSubject(user.getUsername())
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 60*60*1000) )
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME_ACCESS_TOKEN) ) // 1 jour
                 .withIssuer(request.getRequestURI())
                 .withClaim("roles",
                         user.getAuthorities().stream()
                                 .map(GrantedAuthority::getAuthority)
+                                //.map(authority -> authority.getAuthority())
                                 .collect(Collectors.toList()))
                 .sign(algorithm);
 
-        // refresh token : to get new token when jwt_access_token expired
-        String jwt_refresh_token = JWT.create()
+        // refresh token : to get new token when jwtAccessToken expired
+        String jwtRefreshToken = JWT.create()
                 .withSubject(user.getUsername())
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + Constant.EXPIRE_TIME) )
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME_REFRESH_TOKEN) )
                 .withIssuer(request.getRequestURI())
                 .sign(algorithm);
 
-
-        // response.setHeader("access_token",jwt_access_token);
-        // response.setHeader("refresh_token",jwt_access_token);
+        // response.setHeader("access_token",jwtAccessToken);
+        // response.setHeader("refresh_token",jwtRefreshToken);
 
         Map<String, String> tokens = new HashMap<>();
 
-        tokens.put("access_token", jwt_access_token);
-        tokens.put("refresh_token", jwt_refresh_token);
+        tokens.put("access_token", jwtAccessToken);
+        tokens.put("refresh_token", jwtRefreshToken);
 
         response.setContentType("application/json");
         // ObjectMapper convert the map en JSON format
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
     }
 }

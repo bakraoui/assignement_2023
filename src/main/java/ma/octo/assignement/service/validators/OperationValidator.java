@@ -1,50 +1,34 @@
 package ma.octo.assignement.service.validators;
 
-import ma.octo.assignement.dto.operationDto.OperationDto;
+import ma.octo.assignement.dto.operationdto.OperationDto;
+import ma.octo.assignement.service.utils.OperationValidationResult;
+import static ma.octo.assignement.service.utils.OperationValidationResult.*;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
 
-import static ma.octo.assignement.service.validators.OperationValidator.ValidationResult;
-import static ma.octo.assignement.service.validators.OperationValidator.ValidationResult.*;
+import static ma.octo.assignement.service.utils.Constant.MONTANT_MINIMAL;
 
 import static ma.octo.assignement.service.utils.Constant.MONTANT_MAXIMAL;
 
-public interface OperationValidator extends Function<OperationDto, ValidationResult> {
+public interface OperationValidator extends Function<OperationDto, OperationValidationResult> {
 
-    enum ValidationResult {
-        NUMERO_COMPTE_NON_VALIDE("numero de compte saisi non valide"),
-        MONTANT_VIDE("Montant vide"),
-        MONTANT_MINIMAL_NON_ATTEIND("Montant minimal de transfer non atteint"),
-        MONTANT_MAXIMAL_DEPASSE("Montant maximal de transfer dépassé"),
-        MOTIF_VIDE("Motif vide"),
-        SUCCES("les champs sont valides"),
-        SOLDE_INSUFFISANT("Solde insuffisant pour l'utilisateur");
-
-        private String type;
-        ValidationResult(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
-        }
-    }
 
     static OperationValidator isNumeroCompteNonValide() {
         return operationDto ->
                 operationDto.getNrCompteBeneficiaire() == null
                         || operationDto.getNrCompteBeneficiaire().equals("")
-                        || operationDto.getNrCompteBeneficiaire().matches("[!-_+=\\.\\;!@]")?
+                        || operationDto.getNrCompteBeneficiaire().matches("[!-_+=\\.\\;!@]") ?
                         NUMERO_COMPTE_NON_VALIDE : SUCCES;
     }
 
     static OperationValidator isMontantNonVide() {
-        return operationDto ->  operationDto.getMontant().intValue() <= 0 ? MONTANT_VIDE : SUCCES;
+        return operationDto -> operationDto.getMontant()==null
+                || operationDto.getMontant().intValue() <= 0 ? MONTANT_VIDE : SUCCES;
     }
 
     static OperationValidator isMontantNonAtteind() {
-        return operationDto -> operationDto.getMontant().intValue() < 10 ? MONTANT_MINIMAL_NON_ATTEIND : SUCCES;
+        return operationDto -> operationDto.getMontant().intValue() < MONTANT_MINIMAL ? MONTANT_MINIMAL_NON_ATTEIND : SUCCES;
     }
 
     static OperationValidator isMontantDepasse() {
@@ -56,12 +40,13 @@ public interface OperationValidator extends Function<OperationDto, ValidationRes
     }
 
     static OperationValidator isMotifValid() {
-        return operationDto -> operationDto.getMotif() == null || operationDto.getMotif().length() == 0 ? MOTIF_VIDE : SUCCES;
+        return operationDto -> operationDto.getMotif() == null
+                || operationDto.getMotif().length() == 0 ? MOTIF_VIDE : SUCCES;
     }
 
     default OperationValidator and (OperationValidator other) {
         return operationDto -> {
-            ValidationResult result = this.apply(operationDto);
+            OperationValidationResult result = this.apply(operationDto);
             return result.equals(SUCCES) ? other.apply(operationDto) : result;
         };
     }

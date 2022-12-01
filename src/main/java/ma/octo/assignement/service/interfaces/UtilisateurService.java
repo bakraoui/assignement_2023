@@ -1,8 +1,8 @@
 package ma.octo.assignement.service.interfaces;
 
 import ma.octo.assignement.domain.AppRole;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurRequestDto;
-import ma.octo.assignement.dto.utilisateurDto.UtilisateurResponseDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurRequestDto;
+import ma.octo.assignement.dto.utilisateurdto.UtilisateurResponseDto;
 
 import java.util.List;
 

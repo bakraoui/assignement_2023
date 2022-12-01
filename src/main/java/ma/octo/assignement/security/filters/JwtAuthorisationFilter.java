@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -58,6 +59,7 @@ public class JwtAuthorisationFilter extends OncePerRequestFilter {
             }catch (Exception e) {
                 response.setHeader("error-message", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
+
             }
 
 

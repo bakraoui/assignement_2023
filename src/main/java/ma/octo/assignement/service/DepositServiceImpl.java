@@ -4,7 +4,7 @@ import ma.octo.assignement.domain.Compte;
 import ma.octo.assignement.domain.audit.Audit;
 import ma.octo.assignement.domain.audit.AuditDeposit;
 import ma.octo.assignement.domain.operation.MoneyDeposit;
-import ma.octo.assignement.dto.operationDto.DepositDto;
+import ma.octo.assignement.dto.operationdto.DepositDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.TransactionException;
 import ma.octo.assignement.mapper.DepositMapper;
@@ -12,11 +12,12 @@ import ma.octo.assignement.repository.CompteRepository;
 import ma.octo.assignement.repository.DepositRepository;
 import ma.octo.assignement.service.interfaces.AuditService;
 import ma.octo.assignement.service.interfaces.DepositService;
+import ma.octo.assignement.service.utils.OperationValidationResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static ma.octo.assignement.service.utils.OperationValidationResult.*;
 import static ma.octo.assignement.service.validators.OperationValidator.*;
-import static  ma.octo.assignement.service.validators.OperationValidator.ValidationResult.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +49,8 @@ public class DepositServiceImpl implements DepositService {
     public void createTransaction(DepositDto depositDto)
             throws TransactionException, CompteNonExistantException {
 
-        ValidationResult result = isNumeroCompteNonValide()
+        // inputs validation
+        OperationValidationResult result = isNumeroCompteNonValide()
                 .and(isMontantNonVide())
                 .and(isMontantNonAtteind())
                 .and(isMontantDepasse())
@@ -58,7 +60,7 @@ public class DepositServiceImpl implements DepositService {
         if (!result.equals(SUCCES))
             throw new TransactionException(result.getType());
 
-
+        // check account
         Compte beneficiaire = compteRepository
                 .findByRib(depositDto.getRib());
 
@@ -82,8 +84,6 @@ public class DepositServiceImpl implements DepositService {
 
         audit.setMessage(message);
         auditService.createAudit(audit);
-
-
 
 
     }

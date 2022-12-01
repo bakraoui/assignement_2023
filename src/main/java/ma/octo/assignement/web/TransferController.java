@@ -1,6 +1,6 @@
 package ma.octo.assignement.web;
 
-import ma.octo.assignement.dto.operationDto.TransferDto;
+import ma.octo.assignement.dto.operationdto.TransferDto;
 import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;
 import ma.octo.assignement.exceptions.TransactionException;
@@ -21,8 +21,7 @@ class TransferController {
     @Autowired
     private final TransferService transferService;
 
-    @Autowired
-    TransferController(TransferService transferService) {
+    public TransferController(TransferService transferService) {
         this.transferService = transferService;
     }
 

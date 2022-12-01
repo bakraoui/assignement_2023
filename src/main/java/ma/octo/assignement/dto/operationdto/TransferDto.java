@@ -1,4 +1,4 @@
-package ma.octo.assignement.dto.operationDto;
+package ma.octo.assignement.dto.operationdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

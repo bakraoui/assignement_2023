@@ -3,6 +3,7 @@ package ma.octo.assignement.security.filters;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ma.octo.assignement.dto.operationdto.TransferDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         
         // manage the authentication process : check if user exist in DB...
         return authenticationManager.authenticate(authenticationToken);
+
     }
 
     @Override
@@ -94,6 +96,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         // ObjectMapper convert the map en JSON format
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
 
     }
 }

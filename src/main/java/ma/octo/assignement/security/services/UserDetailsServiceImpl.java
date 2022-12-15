@@ -35,5 +35,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
 
         return new User(appUser.getUsername(), appUser.getPassword(), authorities);
+
     }
 }

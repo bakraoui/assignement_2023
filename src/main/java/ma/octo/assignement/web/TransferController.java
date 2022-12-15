@@ -5,8 +5,6 @@ import ma.octo.assignement.exceptions.CompteNonExistantException;
 import ma.octo.assignement.exceptions.SoldeDisponibleInsuffisantException;
 import ma.octo.assignement.exceptions.TransactionException;
 import ma.octo.assignement.service.interfaces.TransferService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/transfers")
 class TransferController {
 
-    Logger LOGGER = LoggerFactory.getLogger(TransferController.class);
     @Autowired
     private final TransferService transferService;
 
@@ -27,15 +24,14 @@ class TransferController {
 
     @GetMapping
     List<TransferDto> loadAll() {
-        LOGGER.info("Lister des utilisateurs");
         return transferService.allTransfer();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTransaction(@RequestBody TransferDto transferDto)
+    public TransferDto createTransaction(@RequestBody TransferDto transferDto)
             throws CompteNonExistantException, TransactionException, SoldeDisponibleInsuffisantException {
-       transferService.createTransaction(transferDto);
+       return transferService.createTransaction(transferDto);
     }
 
 

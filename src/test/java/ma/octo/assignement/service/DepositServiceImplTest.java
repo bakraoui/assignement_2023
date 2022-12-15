@@ -70,8 +70,11 @@ public class DepositServiceImplTest {
         compteService.saveCompte(compteRequest);
 
     }
+
+
     @Test
     public void save_deposit_successfully() {
+
         // faire un deposit d'argent
         DepositDto depositDto = new DepositDto();
         depositDto.setDate(new Date());

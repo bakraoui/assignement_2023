@@ -12,7 +12,6 @@ import java.util.List;
 @RequestMapping("/api/comptes")
 public class CompteController  {
 
-
     private final CompteService compteService;
 
     public CompteController(CompteService compteService) {
@@ -26,7 +25,7 @@ public class CompteController  {
 
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public CompteResponseDto save(@RequestBody CompteRequestDto compteRequestDto){
         return compteService.saveCompte(compteRequestDto);
     }

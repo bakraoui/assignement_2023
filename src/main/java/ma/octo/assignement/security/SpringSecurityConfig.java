@@ -32,14 +32,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-
         http.headers().frameOptions().disable();
+
         http.csrf().disable();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http.authorizeRequests().antMatchers("/h2-console/**", "/login").permitAll();
 
-        http.authorizeRequests().antMatchers("/api")
+        http.authorizeRequests().antMatchers("/api/deposits")
                 .hasAnyAuthority(RoleType.ADMIN.getRole());
 
         http.authorizeRequests()
@@ -47,7 +48,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated();
 
         http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean()));
+
         http.addFilterBefore(new JwtAuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Bean
@@ -55,4 +58,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 }

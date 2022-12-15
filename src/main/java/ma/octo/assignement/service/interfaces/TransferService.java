@@ -11,5 +11,5 @@ import java.util.List;
 public interface TransferService {
 
     List<TransferDto> allTransfer();
-    Transfer createTransaction(TransferDto transferDto) throws CompteNonExistantException, TransactionException, SoldeDisponibleInsuffisantException;
+    TransferDto createTransaction(TransferDto transferDto) throws CompteNonExistantException, TransactionException, SoldeDisponibleInsuffisantException;
 }

@@ -48,14 +48,12 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public Transfer createTransaction(TransferDto transferDto)
+    public TransferDto createTransaction(TransferDto transferDto)
             throws CompteNonExistantException, TransactionException, SoldeDisponibleInsuffisantException {
 
         // validation input
         OperationValidationResult result = isNumeroCompteNonValide()
                 .and(isMontantNonVide())
-                .and(isMontantNonAtteind())
-                .and(isMontantDepasse())
                 .and(isMotifValid())
                 .apply(transferDto);
 
@@ -72,11 +70,17 @@ public class TransferServiceImpl implements TransferService {
         }
 
         // check sold
-        result = isMontantSuffisant(emetteur.getSolde()).apply(transferDto);
+        result = isMontantSuffisant(emetteur.getSolde())
+                .and(isMontantDepasse())
+                .and(isMontantNonAtteind())
+                .apply(transferDto);
 
         if (!result.equals(SUCCES))
             throw new SoldeDisponibleInsuffisantException(result.getType());
 
+        // save the transfer details
+        Transfer transfer = TransferMapper.mapToTransfer(transferDto, emetteur, beneficiaire);
+        Transfer savedTransfert = transferRepository.save(transfer);
 
         // update sold emetteur
         emetteur.setSolde(emetteur.getSolde().subtract(transferDto.getMontant()));
@@ -86,19 +90,17 @@ public class TransferServiceImpl implements TransferService {
         beneficiaire.setSolde(beneficiaire.getSolde().add(transferDto.getMontant()));
         compteRepository.save(beneficiaire);
 
-        // save the transfer details
-        Transfer transfer = TransferMapper.mapToTransfer(transferDto, emetteur, beneficiaire);
-        transferRepository.save(transfer);
-
         // save an audit transfer
         Audit audit = new AuditTransfer();
         String message = "Transfer depuis " + transferDto.getNrCompteEmetteur() + " vers " + transferDto
                 .getNrCompteBeneficiaire() + " d'un montant de " + transferDto.getMontant()
                 .toString();
         audit.setMessage(message);
+
         auditService.createAudit(audit);
 
-        return transfer;
+        return TransferMapper.mapToTransfertDto(savedTransfert);
 
     }
+
 }

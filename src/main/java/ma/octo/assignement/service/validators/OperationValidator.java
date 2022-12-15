@@ -25,6 +25,7 @@ public interface OperationValidator extends Function<OperationDto, OperationVali
     static OperationValidator isMontantNonVide() {
         return operationDto -> operationDto.getMontant()==null
                 || operationDto.getMontant().intValue() <= 0 ? MONTANT_VIDE : SUCCES;
+        // avoid inValue
     }
 
     static OperationValidator isMontantNonAtteind() {
@@ -44,6 +45,7 @@ public interface OperationValidator extends Function<OperationDto, OperationVali
                 || operationDto.getMotif().length() == 0 ? MOTIF_VIDE : SUCCES;
     }
 
+    // combinator
     default OperationValidator and (OperationValidator other) {
         return operationDto -> {
             OperationValidationResult result = this.apply(operationDto);

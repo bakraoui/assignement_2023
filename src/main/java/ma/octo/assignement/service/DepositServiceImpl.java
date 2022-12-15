@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static ma.octo.assignement.service.utils.OperationValidationResult.*;
 import static ma.octo.assignement.service.validators.OperationValidator.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,7 @@ public class DepositServiceImpl implements DepositService {
     public void createTransaction(DepositDto depositDto)
             throws TransactionException, CompteNonExistantException {
 
+
         // inputs validation
         OperationValidationResult result = isNumeroCompteNonValide()
                 .and(isMontantNonVide())
@@ -61,11 +63,16 @@ public class DepositServiceImpl implements DepositService {
             throw new TransactionException(result.getType());
 
         // check account
-        Compte beneficiaire = compteRepository
-                .findByRib(depositDto.getRib());
+        Compte beneficiaire = compteRepository.findByRib(depositDto.getRib());
 
         if (beneficiaire == null) {
             throw new CompteNonExistantException("Compte beneficiaire non Existant");
+        }
+
+        int nombreDeposit = depositRepository.countByCompteBeneficiaireAndDateExecution(beneficiaire, new Date());
+
+        if (nombreDeposit > 10){
+            throw new TransactionException(" le compte....");
         }
 
         // create new deposit
